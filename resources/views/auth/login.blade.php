@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <!-- Include Bootstrap 5 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <!-- Include Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Include jQuery Confirm CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
 </head>
 
 <body style="background: linear-gradient(45deg, #2c3e50, #3498db);">
@@ -19,24 +20,31 @@
                 <div class="card">
                     <div class="card-header bg-primary text-white">Login</div>
                     <div class="card-body">
-                        <form id="loginForm">
-                            @csrf <!-- CSRF token -->
+                        <form id="loginForm" class="needs-validation" novalidate>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" required>
-                                <div id="emailValidation" class="invalid-feedback d-none">Please enter a valid email
-                                    address.</div>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                                <div id="passwordValidation" class="invalid-feedback d-none">Password must be at least 8
-                                    characters long.</div>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="password-toggle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback">Password is required.</div>
                             </div>
-                            <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <button type="submit" id="loginButton" class="btn btn-primary">
+                                <span id="loginLoader" class="spinner-border spinner-border-sm d-none" role="status"
+                                    aria-hidden="true"></span>
+                                Login
+                            </button>
                         </form>
-                        <div id="loginErrors" class="alert alert-danger d-none mt-3"></div>
-                        <div id="loginSuccess" class="alert alert-success d-none mt-3">Login successful. Redirecting...
+                        <div id="loginErrors" class="alert alert-danger d-none mt-2"></div>
+                        <div id="loginSuccess" class="alert alert-success d-none mt-2">Login successful. Redirecting...
                         </div>
                     </div>
                 </div>
@@ -46,42 +54,15 @@
 
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Include jQuery Confirm JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#loginForm').submit(function(e) {
-                e.preventDefault();
-                $('#loginBtn').attr('disabled', true); // Disable login button
-                var formData = $(this).serialize();
-                $.ajax({
-                    url: '/authenticate', // Replace with your Laravel route URL
-                    type: 'POST',
-                    data: formData,
-                    success: function(response) {
-                        $('#loginSuccess').removeClass('d-none')
-                            .show(); // Display success message
-                        setTimeout(function() {
-                            window.location.href =
-                                '/home'; // Redirect to home page after a delay
-                        }, 2000); // Redirect after 2 seconds
-                    },
-                    error: function(xhr, status, error) {
-                        $('#loginErrors').html(xhr.responseText).show(); // Display errors
-                    },
-                    complete: function() {
-                        $('#loginBtn').attr('disabled', false); // Enable login button
-                    }
-                });
-            });
-        });
-    </script>
-
     <!-- Include Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-WD4MhuT/RArFomFJHAux1weJHQ5iFduhHpyfMjJaeoYDQMlZVAAHiagwswRV5J+a" crossorigin="anonymous">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Include jQuery Confirm JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+
+
+    <!-- Include custom JavaScript file -->
+    <script src="{{ asset('js/app/login.js') }}"></script>
+
 </body>
 
 </html>

@@ -9,26 +9,34 @@ use App\Models\User;
 
 class LoginController extends Controller
 {
-    public function authenticate(Request $request){
+    public function authenticate(Request $request)
+    {
         $request->validate([
-            'email'=>'required',
-            'password'=>'required'
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt(['email'=>$email,'password'=>$password])) {
-            $user = User::where('email',$email)->first();
-            Auth::login($user);
-            return redirect('/home');
-        }else{
-            return back()->withErrors(['Invalid credentials!']);
+        if (Auth::attempt($credentials)) {
+            // Authentication passed
+            return response()->json(['status' => 'success'], 200);
+        } else {
+            // User not found or incorrect password
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                // User not found
+                return response()->json(['status' => 'error', 'code' => 404], 404);
+            } else {
+                // Incorrect password
+                return response()->json(['status' => 'error', 'code' => 422], 422);
+            }
         }
     }
 
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }
