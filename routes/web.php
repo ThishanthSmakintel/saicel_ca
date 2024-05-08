@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\TrainingCoursesController;
 
@@ -28,11 +29,13 @@ Route::view('register', 'auth.register')->middleware('guest')->name('register');
 Route::post('register', [RegisterController::class, 'store'])->name('register.store');
 
 // Route to home page, only accessible to authenticated users
-Route::view('home', 'dashboard.home')->middleware('auth')->name('home');
+Route::view('home', 'dashboard.pages.home')->middleware('auth')->name('home');
 
-
+Route::get('user-profile', [ProfileController::class, 'show'])->name('user-profile');
 // Route to show login form
 Route::view('login', 'auth.login')->middleware('guest')->name('login');
+
+
 
 // Route to handle login form submission
 Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
