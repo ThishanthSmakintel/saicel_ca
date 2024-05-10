@@ -46,7 +46,7 @@ class ProductController extends Controller
                 'rating' => 'required|integer|min:0|max:5',
                 'category' => 'required',
                 'description' => 'required',
-                'image' => 'nullable', // Add validation for image
+                'image' => 'nullable',
             ]);
 
             // Create the product without the image URL
@@ -64,8 +64,7 @@ class ProductController extends Controller
                 $uploadedImage = $request->file('image');
 
                 // Generate a unique image name
-                $imageName = time() . '.' . $uploadedImage->getClientOriginalExtension();
-
+                $imageName = auth()->id() . '_' . $product['name'] . '_' . time() . '.' . $uploadedImage->getClientOriginalExtension();
                 // Move the uploaded image to the desired location
                 $uploadedImage->move(public_path('images/product-images/uploaded-images/'), $imageName);
 
@@ -114,10 +113,16 @@ class ProductController extends Controller
                 ], 404); // 404 Not Found
             }
 
+            // Construct the full image URL
+            $imageUrl = asset($product->image); // Assuming 'image' field contains the relative path
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Product retrieved successfully',
-                'data' => $product
+                'data' => [
+                    'product' => $product,
+                    'image_url' => $imageUrl
+                ]
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

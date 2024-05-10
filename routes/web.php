@@ -3,7 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\UsingApi\ProductController as ProductControllerUsingApi;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 
@@ -36,6 +36,8 @@ Route::get('user-profile', [ProfileController::class, 'show'])->name('user-profi
 Route::view('login', 'auth.login')->middleware('guest')->name('login');
 
 
+
+Route::get('/dashboard/products', [ProductControllerUsingApi::class, 'index'])->name('products.index');
 
 // Route to handle login form submission
 Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');

@@ -13,12 +13,15 @@
                         Dashboard
                     </a>
                 </li>
+                <!-- Your Blade View File -->
+
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/admin') }}">
+                    <a class="nav-link" href="{{ route('products.index') }}">
                         <img class="mr-2" src="{{ asset('dashboard/img/Group 1380.png') }}" />
-                        Admin
+                        Products
                     </a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/flat') }}">
                         <img class="mr-2" src="{{ asset('dashboard/img/Group 1381.png') }}" />
