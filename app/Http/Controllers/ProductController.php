@@ -31,7 +31,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.|url|url
+     * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -39,24 +39,44 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
+            // Validate the incoming request data
             $request->validate([
                 'name' => 'required',
                 'price' => 'required|numeric',
                 'rating' => 'required|integer|min:0|max:5',
                 'category' => 'required',
                 'description' => 'required',
-                'image_url' => 'null|url', // Assuming image URL is sent separately
+                'image' => 'nullable', // Add validation for image
             ]);
 
+            // Create the product without the image URL
             $product = new Product([
                 'name' => $request->input('name'),
                 'price' => $request->input('price'),
                 'rating' => $request->input('rating'),
                 'category' => $request->input('category'),
                 'description' => $request->input('description'),
-                'image' => $request->input('image_url'), // Assigning image URL directly
             ]);
 
+            // Check if an image was provided
+            if ($request->hasFile('image')) {
+                // Retrieve the uploaded image
+                $uploadedImage = $request->file('image');
+
+                // Generate a unique image name
+                $imageName = time() . '.' . $uploadedImage->getClientOriginalExtension();
+
+                // Move the uploaded image to the desired location
+                $uploadedImage->move(public_path('images/product-images/uploaded-images/'), $imageName);
+
+                // Construct the image URL
+                $imageUrl = 'images/product-images/uploaded-images/' . $imageName;
+
+                // Update the product with the image URL
+                $product->image = $imageUrl;
+            }
+
+            // Save the product to the database
             $product->save();
 
             return response()->json([
@@ -72,6 +92,8 @@ class ProductController extends Controller
             ], 500); // 500 Internal Server Error
         }
     }
+
+
 
     /**
      * Display the specified resource.
@@ -132,15 +154,33 @@ class ProductController extends Controller
                 'rating' => 'required|integer|min:0|max:5',
                 'category' => 'required',
                 'description' => 'required',
-                'image_url' => 'null|url', // Assuming image URL is sent separately
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
-            $product->name = $request->get('name');
-            $product->price = $request->get('price');
-            $product->rating = $request->get('rating');
-            $product->category = $request->get('category');
-            $product->description = $request->get('description');
-            $product->image = $request->input('image_url'); // Assigning image URL directly
+            // Initialize imageUrl variable
+            $imageUrl = $product->image;
+
+            // Check if image was provided
+            if ($request->hasFile('image')) {
+                // Retrieve the uploaded image
+                $uploadedImage = $request->file('image');
+
+                // Generate a unique image name
+                $imageName = time() . '.' . $uploadedImage->getClientOriginalExtension();
+
+                // Move the uploaded image to the desired location
+                $uploadedImage->move(public_path('images/product-images/uploaded-images/'), $imageName);
+
+                // Construct the image URL
+                $imageUrl = 'images/product-images/uploaded-images/' . $imageName;
+            }
+
+            $product->name = $request->input('name');
+            $product->price = $request->input('price');
+            $product->rating = $request->input('rating');
+            $product->category = $request->input('category');
+            $product->description = $request->input('description');
+            $product->image = $imageUrl;
 
             $product->save();
 
@@ -184,47 +224,6 @@ class ProductController extends Controller
                 'message' => 'Product deleted successfully',
                 'data' => null
             ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Internal Server Error: ' . $e->getMessage(),
-                'data' => null
-            ], 500); // 500 Internal Server Error
-        }
-    }
-
-    /**
-     * Upload image file.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function uploadImage(Request $request)
-    {
-        try {
-            $request->validate([
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
-
-            if ($request->hasFile('image')) {
-                // Upload image
-                $imageName = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('images/product-images/uploaded-images/'), $imageName);
-
-                $imageUrl = '/images/product-images/uploaded-images/' . $imageName;
-
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Image uploaded successfully',
-                    'data' => $imageUrl
-                ], 200);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'No image uploaded',
-                    'data' => null
-                ], 400); // 400 Bad Request
-            }
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',

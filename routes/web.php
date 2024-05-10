@@ -26,7 +26,7 @@ use App\Http\Controllers\TrainingCoursesController;
 Route::view('register', 'auth.register')->middleware('guest')->name('register');
 
 // Route to handle registration form submission
-Route::post('register', [RegisterController::class, 'store'])->name('register.store');
+Route::post('store', [RegisterController::class, 'store'])->name('register.store');
 
 // Route to home page, only accessible to authenticated users
 Route::view('home', 'dashboard.pages.home')->middleware('auth')->name('home');

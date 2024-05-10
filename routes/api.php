@@ -22,4 +22,4 @@ use App\Http\Controllers\ProductController;
 
 
 Route::resource('products', ProductController::class);
-Route::post('/products/upload-image', [ProductController::class, 'uploadImage']);
+Route::post('products/upload-image', [ProductController::class, 'uploadImage'])->name('api.image.upload');
