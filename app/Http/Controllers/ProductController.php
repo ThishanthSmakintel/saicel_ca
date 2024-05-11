@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -36,14 +37,23 @@ class ProductController extends Controller
     {
         try {
             // Validate the incoming request data
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'name' => 'required',
                 'price' => 'required|numeric',
                 'rating' => 'required|integer|min:0|max:5',
                 'category' => 'required',
                 'description' => 'required',
-                'image' => 'nullable',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust image validation rules as needed
             ]);
+
+            // If validation fails, return error response
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Validation error',
+                    'errors' => $validator->errors(),
+                ], 422); // 422 Unprocessable Entity
+            }
 
             // Create the product without the image URL
             $product = new Product([
@@ -60,7 +70,7 @@ class ProductController extends Controller
                 $uploadedImage = $request->file('image');
 
                 // Generate a unique image name
-                $imageName = auth()->id() . '_' . $product['name'] . '_' . time() . '.' . $uploadedImage->getClientOriginalExtension();
+                $imageName = auth()->id() . '_' . $product->name . '_' . time() . '.' . $uploadedImage->getClientOriginalExtension();
                 // Move the uploaded image to the desired location
                 $uploadedImage->move(public_path('images/product-images/uploaded-images/'), $imageName);
 
@@ -87,6 +97,7 @@ class ProductController extends Controller
             ], 500); // 500 Internal Server Error
         }
     }
+
 
 
 

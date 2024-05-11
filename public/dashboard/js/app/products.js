@@ -1,9 +1,4 @@
 $(document).ready(function () {
-    // Show add product modal when clicking on add button
-    $("#showAddProductModal").click(function () {
-        $("#addProductModal").modal("show");
-    });
-
     // Handle form submission for adding a new product
     $("#addProductForm").submit(function (e) {
         e.preventDefault();
@@ -11,7 +6,7 @@ $(document).ready(function () {
         var formData = new FormData(this);
 
         $.ajax({
-            url: "",
+            url: $(this).attr("action"),
             method: "POST",
             data: formData,
             processData: false,
@@ -20,10 +15,45 @@ $(document).ready(function () {
                 // Handle success
                 console.log(response);
                 $("#addProductModal").modal("hide");
+                // Show success alert
+                $.alert({
+                    typeAnimated: true,
+                    type: "red",
+                    btnClass: "btn-red",
+                    title: '<i class="fas fa-check-circle"></i> Success!',
+                    content: "Product created successfully",
+                    buttons: {
+                        ok: {
+                            text: "OK",
+                            btnClass: "btn-red",
+                            action: function () {
+                                location.reload();
+                            },
+                        },
+                    },
+                });
+                // Reload the page
             },
             error: function (xhr, status, error) {
                 // Handle error
-                console.error(xhr.responseText);
+                console.log(xhr.responseText);
+                // Show error alert
+                $.alert({
+                    typeAnimated: true,
+                    type: "red",
+                    btnClass: "btn-red",
+                    title: '<i class="fas fa-exclamation-circle"></i> Error!',
+                    content: "Failed to create product. Please try again.",
+                    buttons: {
+                        ok: {
+                            text: "OK",
+                            btnClass: "btn-red",
+                            action: function () {
+                                location.reload();
+                            },
+                        },
+                    },
+                });
             },
         });
     });

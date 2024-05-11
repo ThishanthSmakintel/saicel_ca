@@ -3,17 +3,58 @@
 @section('title', 'Saicel dashboard')
 
 @section('dashboardContent')
+    <style>
+        .product-card {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+
+        }
+
+        .product-card:hover {
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+
+        }
+
+        .product-card .card-img-top {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            max-height: 200px;
+            object-fit: cover;
+
+        }
+
+        .product-card .card-body {
+            padding: 1.5rem;
+
+        }
+
+        .product-card .btn.dropdown-toggle {
+            border-radius: 20px;
+
+        }
+
+        .product-card .card-title {
+            font-weight: bold;
+        }
+
+        .product-card .card-text {
+            color: #6c757d;
+
+        }
+    </style>
+
     <div class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 mb-4">
                     <button type="button" class="btn btn-primary mb-3 float-right" id="showAddProductModal" data-toggle="modal"
-                        data-target="#addProductModal">Add New
-                        Product</button>
+                        data-target="#addProductModal">Add New Product</button>
                 </div>
                 @forelse ($products as $product)
                     <div class="col-md-3 mb-4">
-                        <div class="card product-card">
+                        <div class="card product-card h-100">
                             <img src="{{ asset($product->image) }}" class="card-img-top" alt="{{ $product->name }}">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $product->name }}</h5>
@@ -45,6 +86,8 @@
         </div>
     </div>
 
+
+
     <!-- Modal for adding a new product -->
 
     <!-- Modal for adding a new product -->
@@ -59,7 +102,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="addProductForm" enctype="multipart/form-data" novalidate>
+                    <form id="addProductForm" enctype="multipart/form-data" novalidate action="{{ route('product.add') }}">
                         @csrf
                         <div class="form-group">
                             <label for="productName">Product Name</label>

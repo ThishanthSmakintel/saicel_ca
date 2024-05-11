@@ -2,7 +2,7 @@
     <div class="sidebar" data-color="purple" data-background-color="white" data-image="">
         <div class="logo">
             <a href="{{ url('/') }}" class="simple-text logo-normal">
-                <img src="{{ asset('dashboard/img/Group 2.svg') }}" alt="logo" />
+                <img src="{{ asset('images/logo.png') }}" alt="logo" class="img-fluid" style="max-height: 40px;">
             </a>
         </div>
         <div class="sidebar-wrapper">
