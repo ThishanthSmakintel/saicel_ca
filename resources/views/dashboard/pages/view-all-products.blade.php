@@ -50,7 +50,7 @@
     <!-- Modal for adding a new product -->
     <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
@@ -59,34 +59,44 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Form for adding a new product -->
-                    <form id="addProductForm" enctype="multipart/form-data">
+                    <form id="addProductForm" enctype="multipart/form-data" novalidate>
                         @csrf
                         <div class="form-group">
                             <label for="productName">Product Name</label>
-                            <input type="text" class="form-control" id="productName" name="name">
+                            <input type="text" class="form-control" id="productName" name="name" required>
+                            <div class="invalid-feedback">Please enter a product name.</div>
                         </div>
                         <div class="form-group">
                             <label for="productPrice">Price</label>
-                            <input type="number" class="form-control" id="productPrice" name="price">
+                            <input type="number" class="form-control" id="productPrice" name="price" required>
+                            <div class="invalid-feedback">Please enter a valid price.</div>
                         </div>
                         <div class="form-group">
                             <label for="productRating">Rating</label>
                             <input type="number" class="form-control" id="productRating" name="rating" min="0"
-                                max="5">
+                                max="5" required>
+                            <div class="invalid-feedback">Please enter a rating between 0 and 5.</div>
                         </div>
                         <div class="form-group">
                             <label for="productCategory">Category</label>
-                            <input type="text" class="form-control" id="productCategory" name="category">
+                            <input type="text" class="form-control" id="productCategory" name="category" required>
+                            <div class="invalid-feedback">Please enter a category.</div>
                         </div>
                         <div class="form-group">
                             <label for="productDescription">Description</label>
-                            <textarea class="form-control" id="productDescription" name="description"></textarea>
+                            <textarea class="form-control" id="productDescription" name="description" required></textarea>
+                            <div class="invalid-feedback">Please enter a description.</div>
                         </div>
                         <div class="form-group">
                             <label for="productImage">Image</label>
-                            <input type="file" class="form-control-file" id="productImage" name="image"
-                                accept="image/*">
+                            <div class="input-group divUploadImage">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="productImage" name="image"
+                                        accept="image/*" required>
+                                    <label class="custom-file-label" for="productImage">Choose file</label>
+                                    <div class="invalid-feedback">Please select an image file.</div>
+                                </div>
+                            </div>
                             <!-- Image preview container -->
                             <div id="imagePreview" class="mt-2"></div>
                         </div>
@@ -96,4 +106,7 @@
             </div>
         </div>
     </div>
+
+
+
 @endsection

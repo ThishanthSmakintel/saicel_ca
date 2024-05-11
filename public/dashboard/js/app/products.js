@@ -57,14 +57,15 @@ $(document).ready(function () {
     function previewImage(event) {
         var reader = new FileReader();
         reader.onload = function () {
+            $(".divUploadImage").hide();
             var output = $("#imagePreview");
             output.html(
-                '<img src="' +
+                '<div style="position: relative;">' +
+                    '<img src="' +
                     reader.result +
-                    '" class="img-fluid img-thumbnail" style="max-width: 200px;">'
-            );
-            output.append(
-                '<button type="button" class="btn btn-danger btn-sm mt-2" id="removeImageButton">Remove</button>'
+                    '" class="img-fluid img-thumbnail" style="max-width: 100%; max-height: 800px;">' +
+                    '<button type="button" class="btn btn-danger btn-sm mt-2" id="removeImageButton" style="position: absolute; top: 5px; right: 5px;"><i class="fas fa-times"></i></button>' +
+                    "</div>"
             );
         };
         reader.readAsDataURL(event.target.files[0]);
@@ -74,6 +75,7 @@ $(document).ready(function () {
     function clearImagePreview() {
         $("#imagePreview").empty(); // Clear the image preview
         $("#productImage").val(""); // Clear the file input value
+        $(".divUploadImage").show();
     }
 
     // Event listener for file input change

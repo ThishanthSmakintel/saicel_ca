@@ -16,7 +16,7 @@
                 <!-- Your Blade View File -->
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('products.index') }}">
+                    <a class="nav-link" href="{{ route('viewAllProducts') }}">
                         <img class="mr-2" src="{{ asset('dashboard/img/Group 1380.png') }}" />
                         Products
                     </a>

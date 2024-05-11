@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="title" content="Ask online Form" />
-    <meta name="description" content=">@yield('title')"> />
+    <meta name="description" content=">@yield('title')" />
     <meta name="keywords" content="" />
     <meta name="robots" content="index, nofollow" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
