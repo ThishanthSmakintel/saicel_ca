@@ -147,6 +147,8 @@
                             </a>
                         </div><!-- logo end -->
 
+
+
                         <button class="navbar-toggler" type="button" data-toggle="collapse"
                             data-target=".navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false"
                             aria-label="Toggle navigation">
@@ -250,6 +252,14 @@
                                 <li class="nav-item">
                                     <a href="{{ route('contact-us') }}" class="nav-link">Contact Us</a>
                                 </li>
+
+                                <li class="nav-item">
+                                    <a href="{{ route('login') }}" class="nav-link">
+                                        <i class="fas fa-user"></i>
+                                        login
+                                    </a>
+                                </li>
+
 
 
                             </ul>
