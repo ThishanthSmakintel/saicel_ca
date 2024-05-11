@@ -12,19 +12,23 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-
-
     public function index()
     {
         try {
             $products = Product::all();
-            return view('dashboard.pages.view-all-products', ['products' => $products]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Products retrieved successfully',
+                'data' => $products
+            ], 200);
         } catch (\Exception $e) {
-            // Handle the exception here
-            return view('error')->with('message', 'Internal Server Error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Internal Server Error: ' . $e->getMessage(),
+                'data' => null
+            ], 500); // 500 Internal Server Error
         }
     }
-
 
     /**
      * Store a newly created resource in storage.

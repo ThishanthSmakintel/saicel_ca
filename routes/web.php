@@ -37,7 +37,7 @@ Route::view('login', 'auth.login')->middleware('guest')->name('login');
 
 
 
-Route::get('/dashboard/products', [ProductControllerUsingApi::class, 'index'])->name('products.index');
+Route::get('/dashboard/products', [ProductController::class, 'index'])->name('viewAllProducts');
 
 // Route to handle login form submission
 Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
