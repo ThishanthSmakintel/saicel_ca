@@ -22,6 +22,8 @@
 
     <link href="{{ asset('dashboard/css/materil.css') }}" rel="stylesheet" />
     <link href="{{ asset('dashboard/css/custom.css') }}" rel="stylesheet" />
+    <link href="{{ asset('dashboard/js/plugins/jqueryCropImage/cropimage.css') }}" rel="stylesheet" />
+
     <link href="{{ asset('dashboard/css/responsive.css') }}" rel="stylesheet" />
 </head>
 
@@ -78,12 +80,18 @@
         <script src="{{ asset('dashboard/js/chartist.min.js') }}"></script>
         <!-- Notifications Plugin -->
         <script src="{{ asset('dashboard/js/bootstrap-notify.js') }}"></script>
+        <!-- Include Cropper.js library -->
+
+
         <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
         <script src="{{ asset('dashboard/js/material-dashboard.min.js?v=2.1.2') }}" type="text/javascript"></script>
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
         <script src="{{ asset('dashboard/js/main.js') }}"></script>
 
+
+        <script src="{{ asset('dashboard/js/plugins/jquery-cropper/dist/jquery-cropper.js') }}"></script>
+        <script src="{{ asset('dashboard/js/plugins/jqueryCropImage/cropimage.js') }}"></script>
 
         <script src="{{ asset('dashboard/js/app/products.js') }}"></script>
 </body>

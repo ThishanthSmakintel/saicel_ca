@@ -53,13 +53,21 @@
                         data-target="#addProductModal">Add New Product</button>
                 </div>
                 @forelse ($products as $product)
-                    <div class="col-md-3 mb-4">
+                    <div class="col-md-4 mb-4"> <!-- Decreased col size to make cards smaller -->
                         <div class="card product-card h-100">
                             <img src="{{ asset($product->image) }}" class="card-img-top" alt="{{ $product->name }}">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $product->name }}</h5>
                                 <p class="card-text">${{ $product->price }}</p>
-                                <p class="card-text">Rating: {{ $product->rating }}</p>
+                                <p class="card-text"> <!-- Star rating -->
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $product->rating)
+                                            <i class="fas fa-star"></i> <!-- Font Awesome star icon -->
+                                        @else
+                                            <i class="far fa-star"></i> <!-- Font Awesome empty star icon -->
+                                        @endif
+                                    @endfor
+                                </p>
                                 <p class="card-text">Category: {{ $product->category }}</p>
                                 <p class="card-text">{{ $product->description }}</p>
                                 <div class="dropdown">
@@ -139,6 +147,7 @@
                                     <label class="custom-file-label" for="productImage">Choose file</label>
                                     <div class="invalid-feedback">Please select an image file.</div>
                                 </div>
+
                             </div>
                             <!-- Image preview container -->
                             <div id="imagePreview" class="mt-2"></div>
@@ -149,6 +158,7 @@
             </div>
         </div>
     </div>
+
 
 
 

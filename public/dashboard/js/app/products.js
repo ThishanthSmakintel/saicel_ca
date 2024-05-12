@@ -14,25 +14,24 @@ $(document).ready(function () {
             success: function (response) {
                 // Handle success
                 console.log(response);
-                $("#addProductModal").modal("hide");
-                // Show success alert
+
                 $.alert({
                     typeAnimated: true,
-                    type: "red",
-                    btnClass: "btn-red",
-                    title: '<i class="fas fa-check-circle"></i> Success!',
+                    type: "green",
+                    icon: "fas fa-check-circle",
                     content: "Product created successfully",
                     buttons: {
                         ok: {
                             text: "OK",
-                            btnClass: "btn-red",
+                            btnClass: "btn-green",
                             action: function () {
-                                location.reload();
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 1000);
                             },
                         },
                     },
                 });
-                // Reload the page
             },
             error: function (xhr, status, error) {
                 // Handle error
