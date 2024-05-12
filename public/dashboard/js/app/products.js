@@ -1,4 +1,9 @@
 $(document).ready(function () {
+    $(window).on("load", function () {
+        $("#loader").fadeOut("slow", function () {
+            $("#productContent").fadeIn("slow"); // Show product content after loader fades out
+        });
+    });
     var cropper;
     var image = $("#imagePreview");
     var addButton = $(".addNewProduct");

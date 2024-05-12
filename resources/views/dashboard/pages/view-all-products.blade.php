@@ -47,59 +47,119 @@
         .product-card .card-text {
             color: #6c757d;
         }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            display: block;
+            margin: 15px auto;
+            position: relative;
+            color: #ccc;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        .loader::after,
+        .loader::before {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            top: 50%;
+            left: 50%;
+            transform: scale(0.5) translate(0, 0);
+            background-color: #ccc;
+            border-radius: 50%;
+            animation: animloader 1s infinite ease-in-out;
+        }
+
+        .loader::before {
+            background-color: #000;
+            transform: scale(0.5) translate(-48px, -48px);
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes animloader {
+            50% {
+                transform: scale(1) translate(-50%, -50%);
+            }
+        }
+
+        /* END Loader style */
+        .content {
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+
+        }
     </style>
 
     <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12 mb-4">
-                    <button type="button" class="btn btn-primary mb-3 float-right" id="showAddProductModal" data-toggle="modal"
-                        data-target="#addProductModal">Add New Product</button>
-                </div>
-                @forelse ($products as $product)
-                    <div class="col-md-3 mb-4"> <!-- Set col size to 3 to fit 4 cards per row -->
-                        <div class="card product-card h-80">
-                            <img src="{{ asset($product->image) }}" class="card-img-top img-fluid h-100"
-                                alt="{{ $product->name }}">
-
-
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $product->name }}</h5>
-                                <p class="card-text">${{ $product->price }}</p>
-                                <p class="card-text"> <!-- Star rating -->
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= $product->rating)
-                                            <i class="fas fa-star"></i> <!-- Font Awesome star icon -->
-                                        @else
-                                            <i class="far fa-star"></i> <!-- Font Awesome empty star icon -->
-                                        @endif
-                                    @endfor
-                                </p>
-                                <p class="card-text">Category: {{ $product->category }}</p>
-                                <p class="card-text">{{ $product->description }}</p>
-                                <div class="dropdown">
-                                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        Actions
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <button class="dropdown-item" data-id="{{ $product->id }}">Edit</button>
-                                        <button class="dropdown-item" data-id="{{ $product->id }}">Delete</button>
+        <div id="loader" class="text-center">
+            <span class="loader"></span>
+        </div>
+        <div id="productContent" style="display: none;"> <!-- Hide product content initially -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <button type="button" class="btn btn-primary mb-3 float-right" id="showAddProductModal"
+                            data-toggle="modal" data-target="#addProductModal">Add New Product</button>
+                    </div>
+                    @forelse ($products as $product)
+                        <div class="col-md-3 mb-4"> <!-- Set col size to 3 to fit 4 cards per row -->
+                            <div class="card product-card h-80">
+                                <img src="{{ asset($product->image) }}" class="card-img-top img-fluid h-100"
+                                    alt="{{ $product->name }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $product->name }}</h5>
+                                    <p class="card-text">${{ $product->price }}</p>
+                                    <p class="card-text"> <!-- Star rating -->
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $product->rating)
+                                                <i class="fas fa-star"></i> <!-- Font Awesome star icon -->
+                                            @else
+                                                <i class="far fa-star"></i> <!-- Font Awesome empty star icon -->
+                                            @endif
+                                        @endfor
+                                    </p>
+                                    <p class="card-text">Category: {{ $product->category }}</p>
+                                    <p class="card-text">{{ $product->description }}</p>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Actions
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <button class="dropdown-item" data-id="{{ $product->id }}">Edit</button>
+                                            <button class="dropdown-item" data-id="{{ $product->id }}">Delete</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @empty
-                    <div class="col">
-                        <div class="alert alert-warning" role="alert">
-                            No products found.
+                    @empty
+                        <div class="col">
+                            <div class="alert alert-warning" role="alert">
+                                No products found.
+                            </div>
                         </div>
-                    </div>
-                @endforelse
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>
+
 
 
 
