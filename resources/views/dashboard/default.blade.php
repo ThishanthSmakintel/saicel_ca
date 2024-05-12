@@ -19,10 +19,16 @@
     <link rel="stylesheet" href="{{ asset('dashboard/css/fontawesome-all.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
-
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.css" crossorigin="anonymous">
     <link href="{{ asset('dashboard/css/materil.css') }}" rel="stylesheet" />
     <link href="{{ asset('dashboard/css/custom.css') }}" rel="stylesheet" />
     <link href="{{ asset('dashboard/js/plugins/jqueryCropImage/cropimage.css') }}" rel="stylesheet" />
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
+
+
+
 
     <link href="{{ asset('dashboard/css/responsive.css') }}" rel="stylesheet" />
 </head>
@@ -89,8 +95,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
         <script src="{{ asset('dashboard/js/main.js') }}"></script>
 
-
+        <!-- Cropper.js JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
         <script src="{{ asset('dashboard/js/plugins/jquery-cropper/dist/jquery-cropper.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
         <script src="{{ asset('dashboard/js/plugins/jqueryCropImage/cropimage.js') }}"></script>
 
         <script src="{{ asset('dashboard/js/app/products.js') }}"></script>

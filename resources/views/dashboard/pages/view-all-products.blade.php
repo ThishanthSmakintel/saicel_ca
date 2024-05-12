@@ -8,31 +8,36 @@
             border: 1px solid #dee2e6;
             border-radius: 10px;
             transition: all 0.3s ease;
-
+            height: 100%;
+            /* Set height to ensure all cards have the same height */
         }
 
         .product-card:hover {
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
             transform: translateY(-5px);
-
         }
 
         .product-card .card-img-top {
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
-            max-height: 200px;
             object-fit: cover;
-
+            /* Ensure the image covers the entire space */
+            height: 200px;
+            /* Set a fixed height for the image */
         }
 
         .product-card .card-body {
             padding: 1.5rem;
-
+            height: calc(100% - 200px);
+            /* Calculate height for the card body */
+            display: flex;
+            /* Use flexbox to align content vertically */
+            flex-direction: column;
+            /* Stack content vertically */
         }
 
         .product-card .btn.dropdown-toggle {
             border-radius: 20px;
-
         }
 
         .product-card .card-title {
@@ -41,7 +46,6 @@
 
         .product-card .card-text {
             color: #6c757d;
-
         }
     </style>
 
@@ -96,12 +100,9 @@
 
 
 
-    <!-- Modal for adding a new product -->
-
-    <!-- Modal for adding a new product -->
     <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-scrollable" style="max-width: 50%" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
@@ -112,52 +113,63 @@
                 <div class="modal-body">
                     <form id="addProductForm" enctype="multipart/form-data" novalidate action="{{ route('product.add') }}">
                         @csrf
-                        <div class="form-group">
-                            <label for="productName">Product Name</label>
-                            <input type="text" class="form-control" id="productName" name="name" required>
-                            <div class="invalid-feedback">Please enter a product name.</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="productPrice">Price</label>
-                            <input type="number" class="form-control" id="productPrice" name="price" required>
-                            <div class="invalid-feedback">Please enter a valid price.</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="productRating">Rating</label>
-                            <input type="number" class="form-control" id="productRating" name="rating" min="0"
-                                max="5" required>
-                            <div class="invalid-feedback">Please enter a rating between 0 and 5.</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="productCategory">Category</label>
-                            <input type="text" class="form-control" id="productCategory" name="category" required>
-                            <div class="invalid-feedback">Please enter a category.</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="productDescription">Description</label>
-                            <textarea class="form-control" id="productDescription" name="description" required></textarea>
-                            <div class="invalid-feedback">Please enter a description.</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="productImage">Image</label>
-                            <div class="input-group divUploadImage">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="productImage" name="image"
-                                        accept="image/*" required>
-                                    <label class="custom-file-label" for="productImage">Choose file</label>
-                                    <div class="invalid-feedback">Please select an image file.</div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="productImage" name="image"
+                                            accept="image/*">
+                                        <label class="custom-file-label" for="productImage">Choose file</label>
+                                    </div>
+                                    <!-- Image preview container -->
+                                    <div id="imagePreview" class="mt-2"></div>
+
+                                    <div class="text-center mb-3">
+                                        <button type="button" class="btn btn-primary" id="cropImageButton"
+                                            style="display:none;">Crop Image</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="productName">Product Name</label>
+                                    <input type="text" class="form-control" id="productName" name="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productPrice">Price</label>
+                                    <input type="number" class="form-control" id="productPrice" name="price">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productRating">Rating</label>
+                                    <input type="number" class="form-control" id="productRating" name="rating"
+                                        min="0" max="5">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productCategory">Category</label>
+                                    <input type="text" class="form-control" id="productCategory" name="category">
                                 </div>
 
+                                <div class="form-group ">
+                                    <textarea class="form-control  mt-2" id="productDescription" name="description"></textarea>
+                                </div>
+
+
                             </div>
-                            <!-- Image preview container -->
-                            <div id="imagePreview" class="mt-2"></div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add Product</button>
+                        <!-- Add Crop button -->
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary addNewProduct">Add Product <span class="loader"
+                                    style="display: none;"></span></button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+
 
 
 
