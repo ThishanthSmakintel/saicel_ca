@@ -57,9 +57,12 @@
                         data-target="#addProductModal">Add New Product</button>
                 </div>
                 @forelse ($products as $product)
-                    <div class="col-md-4 mb-4"> <!-- Decreased col size to make cards smaller -->
-                        <div class="card product-card h-100">
-                            <img src="{{ asset($product->image) }}" class="card-img-top" alt="{{ $product->name }}">
+                    <div class="col-md-3 mb-4"> <!-- Set col size to 3 to fit 4 cards per row -->
+                        <div class="card product-card h-80">
+                            <img src="{{ asset($product->image) }}" class="card-img-top img-fluid h-100"
+                                alt="{{ $product->name }}">
+
+
                             <div class="card-body">
                                 <h5 class="card-title">{{ $product->name }}</h5>
                                 <p class="card-text">${{ $product->price }}</p>
@@ -97,6 +100,7 @@
             </div>
         </div>
     </div>
+
 
 
 
