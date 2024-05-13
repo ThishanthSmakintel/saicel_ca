@@ -1,5 +1,5 @@
 const ajaxUrl = route("product.add");
-console.log(routeUrl);
+console.log("ajaxUrl:", ajaxUrl);
 
 $(document).ready(function () {
     $(window).on("load", function () {
@@ -69,13 +69,85 @@ $(document).ready(function () {
     btnAddNewProduct.click(function () {
         var formData = new FormData();
 
-        formData.append("name", $("#productName").val());
-        formData.append("price", $("#productPrice").val());
-        formData.append("rating", $("#productRating").val());
-        formData.append("category", $("#productCategory").val());
-        formData.append("description", $("#productCategory").val());
-        formData.append("image", $("#productImage")[0].files[0]);
-        formData.append("_token", $("#_token").val());
+        // Get values from form fields
+        var name = $("#productName").val().trim();
+        var price = $("#productPrice").val().trim();
+        var rating = $("#productRating").val().trim();
+        var category = $("#productCategory").val().trim();
+        var description = $("#productDescription").val().trim();
+        var image = $("#productImage")[0].files[0];
+        var token = $("#_token").val().trim();
+
+        // Validation
+        if (name === "") {
+            $.alert({
+                type: "red",
+                btnClass: "btn-red",
+                title: '<i class="fas fa-exclamation-circle"></i> Error!',
+                content: "Please enter a name for the product.",
+                onClose: function () {
+                    $("#productName").focus();
+                },
+            });
+            return false;
+        }
+        if (price === "") {
+            $.alert({
+                type: "red",
+                btnClass: "btn-red",
+                title: '<i class="fas fa-exclamation-circle"></i> Error!',
+                content: "Please enter a price for the product.",
+                onClose: function () {
+                    $("#productPrice").focus();
+                },
+            });
+            return false;
+        }
+        if (isNaN(rating) || rating === "" || rating > 5) {
+            $.alert({
+                type: "red",
+                btnClass: "btn-red",
+                title: '<i class="fas fa-exclamation-circle"></i> Error!',
+                content:
+                    "Please enter a valid rating for the product (less than or equal to 5).",
+                onClose: function () {
+                    $("#productRating").focus();
+                },
+            });
+            return false;
+        }
+        if (category === "") {
+            $.alert({
+                type: "red",
+                btnClass: "btn-red",
+                title: '<i class="fas fa-exclamation-circle"></i> Error!',
+                content: "Please enter a category for the product.",
+                onClose: function () {
+                    $("#productCategory").focus();
+                },
+            });
+            return false;
+        }
+        if (description === "") {
+            $.alert({
+                type: "red",
+                btnClass: "btn-red",
+                title: '<i class="fas fa-exclamation-circle"></i> Error!',
+                content: "Please enter a description for the product.",
+                onClose: function () {
+                    $("#productDescription").focus();
+                },
+            });
+            return false;
+        }
+
+        formData.append("name", name);
+        formData.append("price", price);
+        formData.append("rating", rating);
+        formData.append("category", category);
+        formData.append("description", description);
+        formData.append("image", image);
+        formData.append("_token", token);
 
         $.ajax({
             url: ajaxUrl,
@@ -83,12 +155,18 @@ $(document).ready(function () {
             data: formData,
             processData: false,
             contentType: false,
+            beforeSend: function () {
+                $("#btnAddNewProduct").prop("disabled", true);
+                $(".buttonLoader").removeClass("d-none");
+            },
             success: function (response) {
                 console.log(response);
+
+                $(".buttonLoader").addClass("d-none");
                 $.alert({
                     typeAnimated: true,
                     type: "green",
-                    title: "Alert!",
+                    title: "Success!",
                     icon: "fas fa-check-circle",
                     content: "Product created successfully",
                     buttons: {
@@ -98,14 +176,16 @@ $(document).ready(function () {
                             action: function () {
                                 setTimeout(function () {
                                     location.reload();
-                                }, 1000);
+                                }, 300);
                             },
                         },
                     },
                 });
             },
-            error: function (data) {
-                console.log(data);
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                $("#btnAddNewProduct").prop("disabled", false);
+                $(".buttonLoader").addClass("d-none");
                 $.alert({
                     typeAnimated: true,
                     type: "red",
