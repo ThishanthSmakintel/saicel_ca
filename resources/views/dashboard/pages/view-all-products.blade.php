@@ -118,7 +118,7 @@
                     </div>
                     @forelse ($products as $product)
                         <div class="col-md-3 mb-4"> <!-- Set col size to 3 to fit 4 cards per row -->
-                            <div class="card product-card h-80">
+                            <div class="card product-card h-80" id="product_{{ $product->id }}">
                                 <img src="{{ asset($product->image) }}" class="card-img-top img-fluid h-100"
                                     alt="{{ $product->name }}">
                                 <div class="card-body">
@@ -135,14 +135,15 @@
                                     </p>
                                     <p class="card-text">Category: {{ $product->category }}</p>
                                     <p class="card-text">{{ $product->description }}</p>
-                                    <div class="dropdown">
+                                    <div class="dropdown mb-5">
                                         <button type="button" class="btn btn-primary dropdown-toggle"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Actions
                                         </button>
-                                        <div class="dropdown-menu">
-                                            <button class="dropdown-item" data-id="{{ $product->id }}">Edit</button>
-                                            <button class="dropdown-item" data-id="{{ $product->id }}">Delete</button>
+                                        <div class="dropdown-menu ">
+                                            <button class="dropdown-item" data-ProductId="{{ $product->id }}">Edit</button>
+                                            <button class="dropdown-item btnDeleteProduct"
+                                                data-ProductId="{{ $product->id }}">Delete</button>
                                         </div>
                                     </div>
                                 </div>

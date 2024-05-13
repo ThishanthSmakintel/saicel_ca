@@ -1,6 +1,3 @@
-const ajaxUrl = route("product.add");
-console.log("ajaxUrl:", ajaxUrl);
-
 $(document).ready(function () {
     $(window).on("load", function () {
         $("#loader").fadeOut("slow", function () {
@@ -69,7 +66,6 @@ $(document).ready(function () {
     btnAddNewProduct.click(function () {
         var formData = new FormData();
 
-        // Get values from form fields
         var name = $("#productName").val().trim();
         var price = $("#productPrice").val().trim();
         var rating = $("#productRating").val().trim();
@@ -150,7 +146,7 @@ $(document).ready(function () {
         formData.append("_token", token);
 
         $.ajax({
-            url: ajaxUrl,
+            url: route("product.add"),
             method: "POST",
             data: formData,
             processData: false,
@@ -204,11 +200,98 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on("click", ".edit-btn", function () {
-        var productId = $(this).data("id");
+    $(document).on("click", ".btnDeleteProduct", function () {
+        var productId = $(this).attr("data-productId");
+        var token = $("#_token").val().trim();
+
+        var formData = new FormData();
+        formData.append("_token", token);
+
+        // Show a confirmation dialog
+        $.confirm({
+            title: "Alert",
+            content: "You are about to delete this product. Are you sure?",
+            buttons: {
+                confirm: {
+                    text: "Yes",
+                    btnClass: "btn-red",
+                    action: function () {
+                        // Create form data
+
+                        // Send AJAX request
+                        $.ajax({
+                            url: route("product.destroy", { id: productId }),
+                            method: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function () {
+                                // Get the height and width of the loader
+                                var loaderHeight = $("#loader").outerHeight();
+                                var loaderWidth = $("#loader").outerWidth();
+
+                                // Calculate the position to center the loader within the body
+                                var topPosition =
+                                    ($(window).height() - loaderHeight) / 2;
+                                var leftPosition =
+                                    ($(window).width() - loaderWidth) / 2;
+
+                                // Set the position of the loader
+                                $("#loader").css({
+                                    top: topPosition + "px",
+                                    left: leftPosition + "px",
+                                });
+                                $("#productContent").hide();
+                                $("#loader").show();
+                            },
+                            success: function (response) {
+                                $.alert({
+                                    typeAnimated: true,
+                                    type: "green",
+                                    title: "Success!",
+                                    icon: "fas fa-check-circle",
+                                    content: "Product Deleted successfully",
+                                    buttons: {
+                                        ok: {
+                                            text: "OK",
+                                            btnClass: "btn-green",
+                                            action: function () {
+                                                location.reload();
+                                            },
+                                        },
+                                    },
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                // Show error message
+                                $.alert({
+                                    typeAnimated: true,
+                                    type: "red",
+                                    btnClass: "btn-red",
+                                    title: '<i class="fas fa-exclamation-circle"></i> Error!',
+                                    content:
+                                        "Failed to delete product. Please try again.",
+                                    buttons: {
+                                        ok: {
+                                            text: "OK",
+                                            btnClass: "btn-red",
+                                            action: function () {},
+                                        },
+                                    },
+                                });
+                            },
+                        });
+                    },
+                },
+                cancel: {
+                    text: "No",
+                    btnClass: "btn-default",
+                },
+            },
+        });
     });
 
-    $(document).on("click", ".delete-btn", function () {
+    $(document).on("click", ".edit-btn", function () {
         var productId = $(this).data("id");
     });
 

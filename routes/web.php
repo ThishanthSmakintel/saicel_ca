@@ -40,8 +40,8 @@ Route::view('login', 'auth.login')->middleware('guest')->name('login');
 Route::get('/dashboard/products', [ProductController::class, 'index'])->name('viewAllProducts');
 
 Route::post('/dashboard/add', [ProductController::class, 'store'])->name('product.add');
+Route::post('products/{id}',  [ProductController::class, 'destroy'])->name('product.destroy');
 
-// Route to handle login form submission
 Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
 
 // Route to handle logout
