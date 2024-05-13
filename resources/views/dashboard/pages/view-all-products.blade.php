@@ -175,8 +175,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="addProductForm" enctype="multipart/form-data" novalidate action="{{ route('product.add') }}">
-                        <!-- Form content -->
+                    <!-- Form content -->
+                    <form id="addProductForm">
+                        <input type="hidden" id="_token" value="{{ csrf_token() }}">
+
+
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -199,48 +202,48 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="productName">Product Name</label>
-                                            <input type="text" class="form-control" id="productName" name="name">
+                                            <input type="text" class="form-control" id="productName" name="productName">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="productPrice">Price</label>
-                                            <input type="number" class="form-control" id="productPrice" name="price">
+                                            <input type="number" class="form-control" id="productPrice"
+                                                name="productPrice">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="productRating">Rating</label>
-                                            <input type="number" class="form-control" id="productRating" name="rating"
-                                                min="0" max="5">
+                                            <input type="number" class="form-control" id="productRating"
+                                                name="productRating" min="0" max="5">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="productCategory">Category</label>
                                             <input type="text" class="form-control" id="productCategory"
-                                                name="category">
+                                                name="productCategory">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="productDescription">Description</label>
-                                            <textarea class="form-control mt-2" id="productDescription" name="description" rows="8"></textarea>
+                                            <textarea class="form-control mt-2" id="productDescription" name="productDescription" rows="8"></textarea>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- Add Crop button -->
                     </form>
                 </div>
                 <!-- Add Product button -->
                 <div class="modal-footer text-right">
-                    <button type="submit" class="btn btn-primary addNewProduct">
+                    <button class="btn btn-primary addNewProduct" id="btnAddNewProduct">
                         Add Product
                         <span>
-                            <div class="buttonLoader">
+                            <div class="buttonLoader
+                        d-none">
                                 <div></div>
                                 <div></div>
                                 <div></div>
@@ -252,6 +255,7 @@
             </div>
         </div>
     </div>
+
 
 
 

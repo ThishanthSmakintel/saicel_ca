@@ -36,6 +36,7 @@
 
 
 <body class="">
+    @routes
     <div class="wrapper">
         {{-- Sidebar START --}}
         @include('dashboard.include.sidebar')
