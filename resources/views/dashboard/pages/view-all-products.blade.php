@@ -166,7 +166,7 @@
 
     <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable" style="max-width: 50%" role="document">
+        <div class="modal-dialog modal-dialog-scrollable" style="max-width: 65vw;" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
@@ -176,19 +176,18 @@
                 </div>
                 <div class="modal-body">
                     <form id="addProductForm" enctype="multipart/form-data" novalidate action="{{ route('product.add') }}">
-                        @csrf
+                        <!-- Form content -->
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-
+                                    <label for="productImage">Product Image</label>
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="productImage" name="image"
                                             accept="image/*">
                                         <label class="custom-file-label" for="productImage">Choose file</label>
                                     </div>
                                     <!-- Image preview container -->
-                                    <div id="imagePreview" class="mt-2"></div>
-
+                                    <div id="imagePreview" class="mt-2 text-center"></div>
                                     <div class="text-center mb-3">
                                         <button type="button" class="btn btn-primary" id="cropImageButton"
                                             style="display:none;">Crop Image</button>
@@ -196,42 +195,66 @@
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <div class="form-group">
-                                    <label for="productName">Product Name</label>
-                                    <input type="text" class="form-control" id="productName" name="name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="productPrice">Price</label>
-                                    <input type="number" class="form-control" id="productPrice" name="price">
-                                </div>
-                                <div class="form-group">
-                                    <label for="productRating">Rating</label>
-                                    <input type="number" class="form-control" id="productRating" name="rating"
-                                        min="0" max="5">
-                                </div>
-                                <div class="form-group">
-                                    <label for="productCategory">Category</label>
-                                    <input type="text" class="form-control" id="productCategory" name="category">
-                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="productName">Product Name</label>
+                                            <input type="text" class="form-control" id="productName" name="name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="productPrice">Price</label>
+                                            <input type="number" class="form-control" id="productPrice" name="price">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="productRating">Rating</label>
+                                            <input type="number" class="form-control" id="productRating" name="rating"
+                                                min="0" max="5">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="productCategory">Category</label>
+                                            <input type="text" class="form-control" id="productCategory"
+                                                name="category">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="productDescription">Description</label>
+                                            <textarea class="form-control mt-2" id="productDescription" name="description" rows="8"></textarea>
+                                        </div>
 
-                                <div class="form-group ">
-                                    <textarea class="form-control  mt-2" id="productDescription" name="description"></textarea>
+                                    </div>
                                 </div>
-
-
                             </div>
                         </div>
                         <!-- Add Crop button -->
-
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary addNewProduct">Add Product <span class="loader"
-                                    style="display: none;"></span></button>
-                        </div>
                     </form>
+                </div>
+                <!-- Add Product button -->
+                <div class="modal-footer text-right">
+                    <button type="submit" class="btn btn-primary addNewProduct">
+                        Add Product
+                        <span>
+                            <div class="buttonLoader">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
+
+
 
 
 

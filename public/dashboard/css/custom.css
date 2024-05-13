@@ -47,7 +47,7 @@
     left: 0;
 }
 
-.custom-account-card .progress>span {
+.custom-account-card .progress > span {
     width: 50%;
     height: 100%;
     overflow: hidden;
@@ -128,14 +128,14 @@
     transition: width 0.4s linear;
 }
 
-.custom-user-info-card .searchbar:hover>.search_input {
+.custom-user-info-card .searchbar:hover > .search_input {
     padding: 0 10px;
     width: 400px;
     caret-color: red;
     transition: width 0.4s linear;
 }
 
-.custom-user-info-card .searchbar:hover>.search_icon {
+.custom-user-info-card .searchbar:hover > .search_icon {
     background: white;
     color: #e74c3c;
 }
@@ -211,7 +211,10 @@ button.custom-action-btn {
     margin-top: -3px;
 }
 
-.utility-page-content .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+.utility-page-content
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(
+        .input-group-btn
+    ) {
     width: 100% !important;
 }
 
@@ -324,7 +327,6 @@ button.custom-action-btn {
     border-radius: 15px;
     background: linear-gradient(#7b1fa2 0%, #7c4dff 100%);
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.39);
-
 }
 
 .delete-btn {
@@ -333,7 +335,6 @@ button.custom-action-btn {
     border-radius: 15px;
     background: linear-gradient(#9c27b0 0%, #ff3d00 100%);
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.39);
-
 }
 
 .view-btn {
@@ -342,12 +343,10 @@ button.custom-action-btn {
     border-radius: 15px;
     background: linear-gradient(#133703 0%, #08cc97 100%);
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.39);
-
 }
 
 .date-filter .form-control {
     background-image: none !important;
-
 }
 
 .custom-pagination .page-link {
@@ -367,3 +366,47 @@ button.custom-action-btn {
     background-color: #e53935;
     border-color: #e53935;
 }
+
+/* btn loader START */
+
+.buttonLoader,
+.buttonLoader div {
+    box-sizing: border-box;
+}
+.buttonLoader {
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+}
+.buttonLoader div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    margin: 4px;
+    border: 4px solid currentColor;
+    border-radius: 50%;
+    animation: buttonLoader-animation 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: currentColor transparent transparent transparent;
+}
+.buttonLoader div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.buttonLoader div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.buttonLoader div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes buttonLoader-animation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* btn loader END */

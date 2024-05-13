@@ -131,6 +131,11 @@ $(document).ready(function () {
                 data: formData,
                 processData: false,
                 contentType: false,
+                beforeSend: function () {
+                    // Show loader before sending request
+                    $(".btnAddNewProduct").removeClass("d-none");
+                },
+
                 success: function (response) {
                     console.log(response);
                     $.alert({
