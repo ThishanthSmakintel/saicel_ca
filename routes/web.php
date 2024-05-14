@@ -39,8 +39,15 @@ Route::view('login', 'auth.login')->middleware('guest')->name('login');
 
 Route::get('/dashboard/products', [ProductController::class, 'index'])->name('dashboard.products.viewAllProducts');
 
-Route::post('/dashboard/add', [ProductController::class, 'store'])->name('dashboard.products.add');
-Route::post('products/{id}',  [ProductController::class, 'destroy'])->name('dashboard.product.destroy');
+
+
+Route::prefix('dashboard')->group(function () {
+    Route::post('/add', [ProductController::class, 'store'])->name('dashboard.products.add');
+    Route::get('/show/{id}', [ProductController::class, 'show'])->name('dashboard.products.show');
+
+    Route::post('products/{id}', [ProductController::class, 'destroy'])->name('dashboard.product.destroy');
+});
+
 
 Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
 

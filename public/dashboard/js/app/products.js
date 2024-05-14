@@ -306,3 +306,23 @@ $(document).ready(function () {
         }
     });
 });
+
+$(document).ready(function () {
+    $(".productCard").click(function () {
+        var productId = $(this).attr("data-productId");
+        console.log("Product ID:", productId);
+
+        $.ajax({
+            type: "GET",
+            url: route("dashboard.products.show", { id: productId }),
+            success: function (response) {
+                // Handle success response
+                console.log("Product details:", response);
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                console.error("Error:", error);
+            },
+        });
+    });
+});

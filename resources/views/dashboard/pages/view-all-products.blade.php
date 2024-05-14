@@ -118,7 +118,8 @@
                     </div>
                     @forelse ($products as $product)
                         <div class="col-md-3 mb-4"> <!-- Set col size to 3 to fit 4 cards per row -->
-                            <div class="card product-card h-80" id="product_{{ $product->id }}">
+                            <div class="card product-card h-80 productCard" id="product_{{ $product->id }}"
+                                data-toggle="modal" data-target="#updateProductModal" data-productid="{{ $product->id }}">>
                                 <img src="{{ asset($product->image) }}" class="card-img-top img-fluid h-100"
                                     alt="{{ $product->name }}">
                                 <div class="card-body">
@@ -140,8 +141,9 @@
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Actions
                                         </button>
-                                        <div class="dropdown-menu ">
-                                            <button class="dropdown-item" data-ProductId="{{ $product->id }}">Edit</button>
+                                        <div class="dropdown-menu">
+                                            <button class="dropdown-item btnUpdateProductDetails"
+                                                data-ProductId="{{ $product->id }}">Update Product Details</button>
                                             <button class="dropdown-item btnDeleteProduct"
                                                 data-ProductId="{{ $product->id }}">Delete</button>
                                         </div>
@@ -165,6 +167,106 @@
 
 
 
+
+
+
+
+    <div class="modal fade" id="updateProductModal" tabindex="-1" role="dialog" aria-labelledby="updateProductModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" style="max-width: 65vw;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateProductModalLabel">Update Product</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form content -->
+                    <form id="updateProductForm">
+                        <input type="hidden" id="update_token" value="{{ csrf_token() }}">
+                        <!-- Hidden input for product ID -->
+                        <input type="hidden" id="updateProductId" name="productId">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="updateProductImage">Product Image</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="updateProductImage"
+                                            name="image" accept="image/*">
+                                        <label class="custom-file-label" for="updateProductImage">Choose file</label>
+                                    </div>
+                                    <!-- Image preview container -->
+                                    <div id="updateImagePreview" class="mt-2 text-center"></div>
+                                    <div class="text-center mb-3">
+                                        <button type="button" class="btn btn-primary" id="updateCropImageButton"
+                                            style="display:none;">Crop Image</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="updateProductName">Product Name</label>
+                                            <input type="text" class="form-control" id="updateProductName"
+                                                name="productName">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="updateProductPrice">Price</label>
+                                            <input type="number" class="form-control" id="updateProductPrice"
+                                                name="productPrice">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="updateProductRating">Rating</label>
+                                            <input type="number" class="form-control" id="updateProductRating"
+                                                name="productRating" min="0" max="5">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="updateProductCategory">Category</label>
+                                            <input type="text" class="form-control" id="updateProductCategory"
+                                                name="productCategory">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="updateProductDescription">Description</label>
+                                            <textarea class="form-control mt-2" id="updateProductDescription" name="productDescription" rows="8"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- Update Product button -->
+                <div class="modal-footer text-right">
+                    <button class="btn btn-primary updateProduct" id="updateBtnProduct">
+                        Update Product
+                        <span>
+                            <div class="buttonLoader d-none">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" style="max-width: 65vw;" role="document">
@@ -175,6 +277,9 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+
+
+
                 <div class="modal-body">
                     <!-- Form content -->
                     <form id="addProductForm">
@@ -203,7 +308,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="productName">Product Name</label>
-                                            <input type="text" class="form-control" id="productName" name="productName">
+                                            <input type="text" class="form-control" id="productName"
+                                                name="productName">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -256,11 +362,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
 
 
 
