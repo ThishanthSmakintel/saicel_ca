@@ -146,7 +146,7 @@ $(document).ready(function () {
         formData.append("_token", token);
 
         $.ajax({
-            url: route("product.add"),
+            url: route("dashboard.products.add"),
             method: "POST",
             data: formData,
             processData: false,
@@ -220,7 +220,9 @@ $(document).ready(function () {
 
                         // Send AJAX request
                         $.ajax({
-                            url: route("product.destroy", { id: productId }),
+                            url: route("dashboard.product.destroy", {
+                                id: productId,
+                            }),
                             method: "POST",
                             data: formData,
                             processData: false,
@@ -230,13 +232,11 @@ $(document).ready(function () {
                                 var loaderHeight = $("#loader").outerHeight();
                                 var loaderWidth = $("#loader").outerWidth();
 
-                                // Calculate the position to center the loader within the body
                                 var topPosition =
                                     ($(window).height() - loaderHeight) / 2;
                                 var leftPosition =
                                     ($(window).width() - loaderWidth) / 2;
 
-                                // Set the position of the loader
                                 $("#loader").css({
                                     top: topPosition + "px",
                                     left: leftPosition + "px",

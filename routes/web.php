@@ -29,18 +29,18 @@ Route::view('register', 'auth.register')->middleware('guest')->name('register');
 Route::post('store', [RegisterController::class, 'store'])->name('register.store');
 
 // Route to home page, only accessible to authenticated users
-Route::view('home', 'dashboard.pages.home')->middleware('auth')->name('home');
+Route::view('home', 'dashboard.pages.home')->middleware('auth')->name('dashboard.index');
 
-Route::get('user-profile', [ProfileController::class, 'show'])->name('user-profile');
+Route::get('user-profile', [ProfileController::class, 'show'])->name('dashboard.user-profile');
 // Route to show login form
 Route::view('login', 'auth.login')->middleware('guest')->name('login');
 
 
 
-Route::get('/dashboard/products', [ProductController::class, 'index'])->name('viewAllProducts');
+Route::get('/dashboard/products', [ProductController::class, 'index'])->name('dashboard.products.viewAllProducts');
 
-Route::post('/dashboard/add', [ProductController::class, 'store'])->name('product.add');
-Route::post('products/{id}',  [ProductController::class, 'destroy'])->name('product.destroy');
+Route::post('/dashboard/add', [ProductController::class, 'store'])->name('dashboard.products.add');
+Route::post('products/{id}',  [ProductController::class, 'destroy'])->name('dashboard.product.destroy');
 
 Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
 

@@ -6,7 +6,7 @@ fixed-top
 ">
         <div class="container-fluid">
             <div class="navbar-wrapper">
-                <a class="navbar-brand" href="javascript:;">Dashboard</a>
+                {{-- <a class="navbar-brand" href="javascript:;">Dashboard</a> --}}
             </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -30,15 +30,12 @@ fixed-top
                         <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                             <i class="material-icons">notifications</i>
-                            <span class="notification">5</span>
+                            {{-- <span class="notification">5</span> --}}
                             <p class="d-lg-none d-md-block">Some Actions</p>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="#">Mike John responded to your email</a>
-                            <a class="dropdown-item" href="#">You have 5 new tasks</a>
-                            <a class="dropdown-item" href="#">You're now friend with Andrew</a>
-                            <a class="dropdown-item" href="#">Another Notification</a>
-                            <a class="dropdown-item" href="#">Another One</a>
+                            <a class="dropdown-item" href="#">No notification</a>
+
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -53,7 +50,7 @@ fixed-top
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                            <a class="dropdown-item" href="{{ route('user-profile') }}">Profile</a>
+                            <a class="dropdown-item" href="{{ route('dashboard.user-profile') }}">Profile</a>
                             <a class="dropdown-item" href="#">Settings</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="logout">Log out</a>
