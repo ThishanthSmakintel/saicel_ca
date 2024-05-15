@@ -3,11 +3,10 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UsingApi\ProductController as ProductControllerUsingApi;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-
-use App\Http\Controllers\TrainingCoursesController;
+use App\Http\Controllers\website\ProductController_website;
+use App\Http\Controllers\website\TrainingCoursesController_website;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +18,6 @@ use App\Http\Controllers\TrainingCoursesController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 
 
 // Route to show registration form
@@ -35,26 +33,20 @@ Route::get('user-profile', [ProfileController::class, 'show'])->name('dashboard.
 // Route to show login form
 Route::view('login', 'auth.login')->middleware('guest')->name('login');
 
+Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
 
-
-Route::get('/dashboard/products', [ProductController::class, 'index'])->name('dashboard.products.viewAllProducts');
-
-
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('dashboard')->group(function () {
+    Route::get('/products', [ProductController::class, 'index'])->name('dashboard.products.viewAllProducts');
     Route::post('/add', [ProductController::class, 'store'])->name('dashboard.products.add');
     Route::get('/show/{id}', [ProductController::class, 'show'])->name('dashboard.products.show');
-
-    Route::post('products/{id}', [ProductController::class, 'destroy'])->name('dashboard.product.destroy');
+    Route::post('/products/{id}', [ProductController::class, 'destroy'])->name('dashboard.product.destroy');
 });
 
 
-Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
 
-// Route to handle logout
-Route::get('logout', [LoginController::class, 'logout'])->name('logout');
-
-
+// WEBSITE routes Start
 // Home Page
 Route::get('/', function () {
     return view('index');
@@ -130,11 +122,6 @@ Route::get('/contact-us', function () {
 })->name('contact-us');
 
 //Sealing Service Routes
-Route::get('/sealing-services', [ProductController::class, 'showProductsSlideShow'])->name('sealing-services');
-
-Route::get('/products', [ProductController::class, 'showProducts'])->name('products');
-
-Route::get('/training', [TrainingCoursesController::class, 'fetchTrainingData'])->name('training');
 
 
 
@@ -148,3 +135,11 @@ Route::view('/sealing-services/sealing-patios', 'sealing-services.sealing-patios
 Route::view('/sealing-services/driveways', 'sealing-services.sealing-driveways')->name('sealing-driveways');
 Route::view('/sealing-services/brick-sealing', 'sealing-services.brick-sealing')->name('brick-sealing');
 Route::view('/sealing-services/wood-sealing', 'sealing-services.wood-sealing')->name('wood-sealing');
+
+// WEBSITE routes END
+
+// fetch data in website START
+Route::get('/training', [TrainingCoursesController_website::class, 'fetchTrainingData'])->name('training');
+Route::get('/sealing-services', [ProductController_website::class, 'showProductsSlideShow'])->name('sealing-services');
+Route::get('/products', [ProductController_website::class, 'showProducts'])->name('products');
+// fetch data in website END
