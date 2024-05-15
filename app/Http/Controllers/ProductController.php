@@ -43,7 +43,8 @@ class ProductController extends Controller
                 'rating' => 'required|integer|min:0|max:5',
                 'category' => 'required',
                 'description' => 'required',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust image validation rules as needed
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'productLink' => 'nullable',
             ]);
 
             // If validation fails, return error response
@@ -62,6 +63,7 @@ class ProductController extends Controller
                 'rating' => $request->input('rating'),
                 'category' => $request->input('category'),
                 'description' => $request->input('description'),
+                'productLink' => $request->input('productLink')
             ]);
 
             // Check if an image was provided
@@ -168,6 +170,7 @@ class ProductController extends Controller
                 'category' => 'required',
                 'description' => 'required',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'description' => 'nullable',
             ]);
 
             // Initialize imageUrl variable

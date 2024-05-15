@@ -118,8 +118,7 @@
                     </div>
                     @forelse ($products as $product)
                         <div class="col-md-3 mb-4"> <!-- Set col size to 3 to fit 4 cards per row -->
-                            <div class="card product-card h-80 productCard" id="product_{{ $product->id }}"
-                                data-toggle="modal" data-target="#updateProductModal" data-productid="{{ $product->id }}">>
+                            <div class="card product-card h-80 productCard" id="product_{{ $product->id }}">
                                 <img src="{{ asset($product->image) }}" class="card-img-top img-fluid h-100"
                                     alt="{{ $product->name }}">
                                 <div class="card-body">
@@ -136,6 +135,8 @@
                                     </p>
                                     <p class="card-text">Category: {{ $product->category }}</p>
                                     <p class="card-text">{{ $product->description }}</p>
+                                    <a href="{{ $product->productLink }}">Prodcut link</a>
+
                                     <div class="dropdown mb-5">
                                         <button type="button" class="btn btn-primary dropdown-toggle"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -143,7 +144,11 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             <button class="dropdown-item btnUpdateProductDetails"
-                                                data-ProductId="{{ $product->id }}">Update Product Details</button>
+                                                data-productId="{{ $product->id }}" data-toggle="modal"
+                                                data-target="#updateProductModal" disabled>
+                                                Update Product Details
+                                            </button>
+
                                             <button class="dropdown-item btnDeleteProduct"
                                                 data-ProductId="{{ $product->id }}">Delete</button>
                                         </div>
@@ -337,6 +342,12 @@
                                         <div class="form-group">
                                             <label for="productDescription">Description</label>
                                             <textarea class="form-control mt-2" id="productDescription" name="productDescription" rows="8"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="productDescription">Product Link</label>
+                                            <textarea class="form-control mt-2" id="productLink" name="productLink" rows="3"></textarea>
                                         </div>
                                     </div>
                                 </div>

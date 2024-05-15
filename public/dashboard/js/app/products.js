@@ -71,6 +71,7 @@ $(document).ready(function () {
         var rating = $("#productRating").val().trim();
         var category = $("#productCategory").val().trim();
         var description = $("#productDescription").val().trim();
+        var productLink = $("#productLink").val().trim();
         var image = $("#productImage")[0].files[0];
         var token = $("#_token").val().trim();
 
@@ -136,6 +137,18 @@ $(document).ready(function () {
             });
             return false;
         }
+        if (productLink === "") {
+            $.alert({
+                type: "red",
+                btnClass: "btn-red",
+                title: '<i class="fas fa-exclamation-circle"></i> Error!',
+                content: "Please enter a productLink for the product.",
+                onClose: function () {
+                    $("#productLink").focus();
+                },
+            });
+            return false;
+        }
 
         formData.append("name", name);
         formData.append("price", price);
@@ -144,6 +157,7 @@ $(document).ready(function () {
         formData.append("description", description);
         formData.append("image", image);
         formData.append("_token", token);
+        formData.append("productLink", productLink);
 
         $.ajax({
             url: route("dashboard.products.add"),
