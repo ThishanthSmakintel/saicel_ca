@@ -248,7 +248,7 @@
         <h2 class="text-center">Check out our Amazing Products</h2>
         <div class="product-slider">
             @php
-                $totalProducts = count($products);
+                $totalProducts = $products->count();
                 $productsPerSlide = 4;
             @endphp
 
@@ -256,33 +256,37 @@
                 <div class="card mx-1">
                     <div class="row">
                         @php
-                            $productsInSlide = array_slice($products, $slide * $productsPerSlide, $productsPerSlide);
+                            $productsInSlide = $products->slice($slide * $productsPerSlide, $productsPerSlide);
                         @endphp
                         @foreach ($productsInSlide as $product)
                             <div class="col-md-3">
-                                <div class="card">
-                                    <div class="card-body before-image"
-                                        style="font-size: 10px; background-image: url('{{ $product['image'] }}');">
-                                        <!-- Star rating icon -->
+                                <a href="{{ $product->productlink }}" class="card-link">
+                                    <div class="card">
+                                        <div class="card-body before-image"
+                                            style="font-size: 10px; background-image: url('{{ $product->image }}');">
+                                            <!-- Star rating icon -->
+                                        </div>
+                                        <div class="text-center mb-2">
+                                            @for ($i = 0; $i < $product->rating; $i++)
+                                                <i class="fas fa-star fa-2x text-warning"></i>
+                                            @endfor
+                                            @for ($i = $product->rating; $i < 5; $i++)
+                                                <i class="far fa-star fa-2x text-warning"></i>
+                                            @endfor
+                                        </div>
+                                        <p class="text-center">{{ $product->name }}</p>
+                                        <p class="text-center"><span class="highlight">${{ $product->price }}</span></p>
                                     </div>
-                                    <div class="text-center mb-2">
-                                        @for ($i = 0; $i < $product['rating']; $i++)
-                                            <i class="fas fa-star fa-2x text-warning"></i>
-                                        @endfor
-                                        @for ($i = $product['rating']; $i < 5; $i++)
-                                            <i class="far fa-star fa-2x text-warning"></i>
-                                        @endfor
-                                    </div>
-                                    <p class="text-center">{{ $product['name'] }}</p>
-                                    <p class="text-center"><span class="highlight">${{ $product['price'] }}</span></p>
-                                </div>
+                                </a>
                             </div>
                         @endforeach
                     </div>
                 </div>
+
             @endfor
         </div>
     </div>
+
 
 
 
