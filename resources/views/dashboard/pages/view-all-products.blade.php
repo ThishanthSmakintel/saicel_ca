@@ -103,13 +103,55 @@
             height: 100vh;
 
         }
+
+        /* Loader Styles */
+        /* Loader Styles */
+        #modalLoader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Semi-transparent white background */
+            z-index: 9999;
+            /* Ensure it appears on top of other content */
+        }
+
+        #modalLoader .loader-loaderContainer {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Ensure the modal body fills the entire height of the modal */
+        .modal-body {
+            height: 100%;
+        }
     </style>
 
     <div class="content">
         <div id="loader" class="text-center">
             <span class="loader"></span>
         </div>
-        <div id="productContent" style="display: none;"> <!-- Hide product content initially -->
+        <div id="productContent" style="display: none;">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 mb-4">
@@ -145,7 +187,7 @@
                                         <div class="dropdown-menu">
                                             <button class="dropdown-item btnUpdateProductDetails"
                                                 data-productId="{{ $product->id }}" data-toggle="modal"
-                                                data-target="#updateProductModal" disabled>
+                                                data-target="#updateProductModal">
                                                 Update Product Details
                                             </button>
 
@@ -187,6 +229,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div id="modalLoader" class="loader-container" style="display: none;">
+                        <div class="loader-loaderContainer"></div>
+
+                    </div>
                     <!-- Form content -->
                     <form id="updateProductForm">
                         <input type="hidden" id="update_token" value="{{ csrf_token() }}">
@@ -244,6 +290,12 @@
                                         <div class="form-group">
                                             <label for="updateProductDescription">Description</label>
                                             <textarea class="form-control mt-2" id="updateProductDescription" name="productDescription" rows="8"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="updateProductLink mb-2">Product Link</label>
+                                            <textarea class="form-control mt-2" id="updateProductLink" name="updateProductLink" rows="10"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -346,8 +398,8 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="productDescription">Product Link</label>
-                                            <textarea class="form-control mt-2" id="productLink" name="productLink" rows="3"></textarea>
+                                            <label for="productLink mb-2">Product Link</label>
+                                            <textarea class="form-control mt-2" id="productLink" name="productLink" rows="10"></textarea>
                                         </div>
                                     </div>
                                 </div>

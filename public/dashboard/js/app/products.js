@@ -1,9 +1,10 @@
 $(document).ready(function () {
-    $(window).on("load", function () {
+    $(document).ready(function () {
         $("#loader").fadeOut("slow", function () {
             $("#productContent").fadeIn("slow");
         });
     });
+
     var cropper;
     var image = $("#imagePreview");
     var btnAddNewProduct = $("#btnAddNewProduct");
@@ -321,21 +322,140 @@ $(document).ready(function () {
     });
 });
 
-$(document).ready(function () {
-    $(".productCard").click(function () {
-        var productId = $(this).attr("data-productId");
-        console.log("Product ID:", productId);
+// $(document).ready(function () {
+//     $(".btnUpdateProductDetails").click(function () {
+//         var productId = $(this).attr("data-productId");
+//         console.log("Product ID:", productId);
 
+//         $.ajax({
+//             type: "GET",
+//             url: route("dashboard.products.show", { id: productId }),
+//             success: function (response) {
+//                 // Handle success response
+//                 console.log("Product details:", response);
+//             },
+//             error: function (xhr, status, error) {
+//                 // Handle error
+//                 console.error("Error:", error);
+//             },
+//         });
+//     });
+// });
+$(document).ready(function () {
+    var cropper;
+    var image = $("#updateImagePreview");
+    var updateBtnProduct = $("#updateBtnProduct"); // Define updateBtnProduct
+
+    updateBtnProduct.prop("disabled", true);
+
+    $("#updateProductImage").change(function () {
+        updateBtnProduct.prop("disabled", true);
+        var file = $(this)[0].files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            image.html(
+                '<img src="' +
+                    e.target.result +
+                    '" id="UpdateUploadedImage" style="max-width: 100%;">'
+            );
+            $("#updateCropImageButton").show();
+
+            cropper = new Cropper(
+                document.getElementById("UpdateUploadedImage"),
+                {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    crop: function (e) {
+                        $("#crop_x").val(e.detail.x);
+                        $("#crop_y").val(e.detail.y);
+                        $("#crop_width").val(e.detail.width);
+                        $("#crop_height").val(e.detail.height);
+                    },
+                }
+            );
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    $("#updateCropImageButton").click(function () {
+        updateBtnProduct.prop("disabled", false);
+        var canvas = cropper.getCroppedCanvas();
+
+        var croppedImageDataURL = canvas.toDataURL("image/jpeg");
+
+        image.html(
+            '<img src="' +
+                croppedImageDataURL +
+                '" style="max-width: 100%; display: flex; justify-content: center; align-items: center; height: 100%;">'
+        );
+
+        $("#addProductForm").append(
+            '<input type="hidden" name="croppedImage" value="' +
+                croppedImageDataURL +
+                '">'
+        );
+        $("#addProductForm").append(
+            '<input type="hidden" name="_token" value="' +
+                $('meta[name="csrf-token"]').attr("content") +
+                '">'
+        );
+        $("#cropImageButton").hide();
+    });
+
+    // Event listener for the "Update Product" button
+    $(".btnUpdateProductDetails").click(function () {
+        var productId = $(this).attr("data-productId");
+
+        // Show the loader
+        $("#modalLoader").show();
+
+        // Send an AJAX request to fetch product details
         $.ajax({
             type: "GET",
             url: route("dashboard.products.show", { id: productId }),
             success: function (response) {
                 // Handle success response
-                console.log("Product details:", response);
+                console.log(response);
+
+                // Extract relevant data directly from the response
+                var productData = response.data.product;
+                var imageUrl = response.data.image_url;
+
+                console.log("Product Data:");
+                console.log("ID:", productData.id);
+                console.log("Name:", productData.name);
+                console.log("Price:", productData.price);
+                console.log("Rating:", productData.rating);
+                console.log("Category:", productData.category);
+                console.log("Description:", productData.description);
+                console.log("Product Link:", productData.productLink);
+                console.log("Image URL:", imageUrl);
+
+                // Set values of input fields
+                $("#updateProductName").val(productData.name);
+                $("#updateProductPrice").val(productData.price);
+                $("#updateProductRating").val(productData.rating);
+                $("#updateProductCategory").val(productData.category);
+                $("#updateProductDescription").val(productData.description);
+                $("#updateProductLink").val(productData.productLink);
+                // Set the image preview
+                $("#updateImagePreview").html(
+                    '<img src="' + imageUrl + '" style="max-width: 100%;">'
+                );
+
+                // Open the updateProductModal
+                $("#updateProductModal").modal("show");
             },
             error: function (xhr, status, error) {
                 // Handle error
                 console.error("Error:", error);
+                // Optionally, show an error message or perform error handling actions
+            },
+            complete: function () {
+                // Hide the loader after the AJAX request is complete
+                $("#modalLoader").hide();
             },
         });
     });
