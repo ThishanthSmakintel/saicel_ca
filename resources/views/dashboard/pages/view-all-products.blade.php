@@ -235,6 +235,7 @@
                     </div>
                     <!-- Form content -->
                     <form id="updateProductForm">
+                        <input type="hidden" id="thisProductId" value="0">
                         <input type="hidden" id="update_token" value="{{ csrf_token() }}">
                         <!-- Hidden input for product ID -->
                         <input type="hidden" id="updateProductId" name="productId">
@@ -307,14 +308,7 @@
                 <div class="modal-footer text-right">
                     <button class="btn btn-primary updateProduct" id="updateBtnProduct">
                         Update Product
-                        <span>
-                            <div class="buttonLoader d-none">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                        </span>
+
                     </button>
                 </div>
             </div>
@@ -338,6 +332,10 @@
 
 
                 <div class="modal-body">
+                    <div id="modalLoader" class="loader-container" style="display: none;">
+                        <div class="loader-loaderContainer"></div>
+
+                    </div>
                     <!-- Form content -->
                     <form id="addProductForm">
                         <input type="hidden" id="_token" value="{{ csrf_token() }}">

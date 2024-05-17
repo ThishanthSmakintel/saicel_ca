@@ -26,7 +26,7 @@
                             <div class="project-item-info">
                                 <div class="project-item-info-content">
                                     <h3 class="project-item-title">
-                                        <a href="projects-single.html">Residential Cleaning & Sealing</a>
+                                        <a href="{{ route('contact-us') }}">Residential Cleaning & Sealing</a>
                                     </h3>
                                     <p class="project-cat"> Book now</p>
                                 </div>
@@ -47,7 +47,7 @@
                             <div class="project-item-info">
                                 <div class="project-item-info-content">
                                     <h3 class="project-item-title">
-                                        <a href="projects-single.html">Commercial Cleaning & Sealing
+                                        <a href="{{ route('contact-us') }}">Commercial Cleaning & Sealing
                                         </a>
                                     </h3>
                                     <p class="project-cat"> Book now</p>
@@ -69,7 +69,7 @@
                             <div class="project-item-info">
                                 <div class="project-item-info-content">
                                     <h3 class="project-item-title">
-                                        <a href="projects-single.html">Carpet Cleaning
+                                        <a href="{{ route('contact-us') }}">Carpet Cleaning
                                         </a>
                                     </h3>
                                     <p class="project-cat"> Book now</p>
@@ -91,7 +91,7 @@
                             <div class="project-item-info">
                                 <div class="project-item-info-content">
                                     <h3 class="project-item-title">
-                                        <a href="projects-single.html">Garden Cleaning</a>
+                                        <a href="{{ route('contact-us') }}">Garden Cleaning</a>
                                     </h3>
                                     <p class="project-cat"> Book now</p>
                                 </div>
@@ -112,7 +112,7 @@
                             <div class="project-item-info">
                                 <div class="project-item-info-content">
                                     <h3 class="project-item-title">
-                                        <a href="projects-single.html">Driveways Cleaning & Sealing</a>
+                                        <a href="{{ route('contact-us') }}">Driveways Cleaning & Sealing</a>
                                     </h3>
                                     <p class="project-cat"> Book now</p>
                                 </div>
@@ -132,7 +132,7 @@
                             <div class="project-item-info">
                                 <div class="project-item-info-content">
                                     <h3 class="project-item-title">
-                                        <a href="projects-single.html">Property Maintenance Services</a>
+                                        <a href="{{ route('contact-us') }}">Property Maintenance Services</a>
                                     </h3>
                                     <p class="project-cat"> Book now</p>
                                 </div>

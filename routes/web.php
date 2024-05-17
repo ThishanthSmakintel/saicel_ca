@@ -37,12 +37,12 @@ Route::post('authenticate', [LoginController::class, 'authenticate'])->name('aut
 
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::prefix('dashboard')->group(function () {
-    Route::get('/products', [ProductController::class, 'index'])->name('dashboard.products.viewAllProducts');
-    Route::post('/add', [ProductController::class, 'store'])->name('dashboard.products.add');
-    Route::get('/show/{id}', [ProductController::class, 'show'])->name('dashboard.products.show');
-    Route::post('/products/{id}', [ProductController::class, 'destroy'])->name('dashboard.product.destroy');
-});
+Route::get('/dashboard/products', [ProductController::class, 'index'])->name('dashboard.products.viewAllProducts');
+Route::post('/dashboard/add', [ProductController::class, 'store'])->name('dashboard.products.add');
+Route::get('/dashboard/show/{id}', [ProductController::class, 'show'])->name('dashboard.products.show');
+Route::post('/dashboard/product/delete/{id}', [ProductController::class, 'destroy'])->name('dashboard.products.destroy');
+Route::post('/dashboard/products/{id}', [ProductController::class, 'update'])->name('dashboard.products.update');
+
 
 
 

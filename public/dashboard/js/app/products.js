@@ -218,10 +218,12 @@ $(document).ready(function () {
     $(document).on("click", ".btnDeleteProduct", function () {
         var productId = $(this).attr("data-productId");
         var token = $("#_token").val().trim();
-
+        let deleteUrl = route("dashboard.products.destroy", { id: productId });
+        console.log("deleteUrl" + deleteUrl);
+        console.log("btnDeleteProduct" + productId);
         var formData = new FormData();
         formData.append("_token", token);
-
+        formData.append("id", productId);
         // Show a confirmation dialog
         $.confirm({
             title: "Alert",
@@ -235,9 +237,7 @@ $(document).ready(function () {
 
                         // Send AJAX request
                         $.ajax({
-                            url: route("dashboard.product.destroy", {
-                                id: productId,
-                            }),
+                            url: deleteUrl,
                             method: "POST",
                             data: formData,
                             processData: false,
@@ -305,21 +305,6 @@ $(document).ready(function () {
             },
         });
     });
-
-    $(document).on("click", ".edit-btn", function () {
-        var productId = $(this).data("id");
-    });
-
-    $("#addProductModal").on("hidden.bs.modal", function () {
-        $("#productImage").val("");
-        image.html("");
-        $("#addProductForm")[0].reset();
-        btnAddNewProduct.prop("disabled", true);
-
-        if (cropper) {
-            cropper.destroy();
-        }
-    });
 });
 
 // $(document).ready(function () {
@@ -345,8 +330,6 @@ $(document).ready(function () {
     var cropper;
     var image = $("#updateImagePreview");
     var updateBtnProduct = $("#updateBtnProduct"); // Define updateBtnProduct
-
-    updateBtnProduct.prop("disabled", true);
 
     $("#updateProductImage").change(function () {
         updateBtnProduct.prop("disabled", true);
@@ -401,13 +384,14 @@ $(document).ready(function () {
                 $('meta[name="csrf-token"]').attr("content") +
                 '">'
         );
-        $("#cropImageButton").hide();
+        $("#updateCropImageButton").hide();
     });
 
     // Event listener for the "Update Product" button
     $(".btnUpdateProductDetails").click(function () {
         var productId = $(this).attr("data-productId");
-
+        console.log("productId ", productId);
+        $("#thisProductId").val(productId);
         // Show the loader
         $("#modalLoader").show();
 
@@ -448,15 +432,97 @@ $(document).ready(function () {
                 // Open the updateProductModal
                 $("#updateProductModal").modal("show");
             },
-            error: function (xhr, status, error) {
-                // Handle error
-                console.error("Error:", error);
-                // Optionally, show an error message or perform error handling actions
+            error: function (error) {
+                console.log("Error:", error);
             },
             complete: function () {
                 // Hide the loader after the AJAX request is complete
                 $("#modalLoader").hide();
             },
         });
+    });
+});
+// update product
+$("#updateBtnProduct").click(function () {
+    var formData = new FormData();
+
+    // Collect data from input fields
+    var productId = $("#thisProductId").val().trim();
+    var name = $("#updateProductName").val().trim();
+    var price = $("#updateProductPrice").val().trim();
+    var rating = $("#updateProductRating").val().trim();
+    var category = $("#updateProductCategory").val().trim();
+    var description = $("#updateProductDescription").val().trim();
+    var productLink = $("#updateProductLink").val().trim();
+    var image = $("#updateProductImage")[0].files[0];
+    var token = $("#_token").val().trim();
+
+    formData.append("id", productId);
+    formData.append("name", name);
+    formData.append("price", price);
+    formData.append("rating", rating);
+    formData.append("category", category);
+    formData.append("description", description);
+    formData.append("productLink", productLink);
+    formData.append("image", image);
+    formData.append("_token", token);
+
+    $.ajax({
+        url: route("dashboard.product.update", { id: productId }),
+        method: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function () {
+            // Disable button and show loader
+            $("#updateBtnProduct").prop("disabled", true);
+            $(".buttonLoader").removeClass("d-none");
+            $("#modalLoader").show();
+        },
+        success: function (response) {
+            // Handle success response
+            console.log(response);
+            $(".buttonLoader").addClass("d-none");
+
+            // Show success message
+            $.alert({
+                typeAnimated: true,
+                type: "green",
+                title: "Success!",
+                icon: "fas fa-check-circle",
+                content: "Product updated successfully",
+                buttons: {
+                    ok: {
+                        text: "OK",
+                        btnClass: "btn-green",
+                        action: function () {
+                            location.reload();
+                        },
+                    },
+                },
+            });
+        },
+        error: function (xhr, status, error) {
+            $("#modalLoader").hide();
+            console.error(xhr.responseText);
+            $("#updateBtnProduct").prop("disabled", false);
+            $(".buttonLoader").addClass("d-none");
+
+            // Show error message
+            $.alert({
+                typeAnimated: true,
+                type: "red",
+                btnClass: "btn-red",
+                title: '<i class="fas fa-exclamation-circle"></i> Error!',
+                content: "Failed to update product. Please try again.",
+                buttons: {
+                    ok: {
+                        text: "OK",
+                        btnClass: "btn-red",
+                        action: function () {},
+                    },
+                },
+            });
+        },
     });
 });
