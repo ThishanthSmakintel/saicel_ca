@@ -15,9 +15,6 @@ class TrackVisitorMiddleware
 
         // Check if the request is coming from localhost
         if ($ip !== '127.0.0.1' && $ip !== '::1') {
-            // Extract product ID from the request parameters or payload
-            $productId = $request->input('product_id');
-
             // Check if the visitor's IP address exists in the database
             $visitor = DB::table('visitors')->where('ip_address', $ip)->first();
 
@@ -32,11 +29,10 @@ class TrackVisitorMiddleware
                 $visitorId = $visitor->id;
             }
 
-            // Log the user interaction with the product
-            DB::table('product_interactions')->insert([
+            // Log the user activity
+            DB::table('user_activities')->insert([
                 'visitor_id' => $visitorId,
-                'product_id' => $productId,
-                'action' => 'viewed', // Assuming the user viewed the product
+                'page_visited' => $request->path(),
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
