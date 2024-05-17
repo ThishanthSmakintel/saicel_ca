@@ -27,7 +27,7 @@ Route::view('register', 'auth.register')->middleware('guest')->name('register');
 Route::post('store', [RegisterController::class, 'store'])->name('register.store');
 
 // Route to home page, only accessible to authenticated users
-Route::view('home', 'dashboard.pages.home')->middleware('auth')->name('dashboard.index');
+
 
 Route::get('user-profile', [ProfileController::class, 'show'])->name('dashboard.user-profile');
 // Route to show login form
@@ -37,11 +37,16 @@ Route::post('authenticate', [LoginController::class, 'authenticate'])->name('aut
 
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/dashboard/products', [ProductController::class, 'index'])->name('dashboard.products.viewAllProducts');
-Route::post('/dashboard/add', [ProductController::class, 'store'])->name('dashboard.products.add');
-Route::get('/dashboard/show/{id}', [ProductController::class, 'show'])->name('dashboard.products.show');
-Route::post('/dashboard/product/delete/{id}', [ProductController::class, 'destroy'])->name('dashboard.products.destroy');
-Route::post('/dashboard/products/{id}', [ProductController::class, 'update'])->name('dashboard.products.update');
+Route::view('home', 'dashboard.pages.home')->middleware('auth')->name('dashboard.index');
+
+
+Route::prefix('dashboard')->group(function () {
+    Route::get('/products', [ProductController::class, 'index'])->name('dashboard.products.viewAllProducts');
+    Route::post('/add', [ProductController::class, 'store'])->name('dashboard.products.add');
+    Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('dashboard.products.show');
+    Route::post('/product/delete/{id}', [ProductController::class, 'destroy'])->name('dashboard.products.destroy');
+    Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('dashboard.products.update');
+});
 
 
 

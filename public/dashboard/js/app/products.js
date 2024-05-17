@@ -468,7 +468,7 @@ $("#updateBtnProduct").click(function () {
     formData.append("_token", token);
 
     $.ajax({
-        url: route("dashboard.product.update", { id: productId }),
+        url: route("dashboard.products.update", { id: productId }),
         method: "POST",
         data: formData,
         processData: false,
