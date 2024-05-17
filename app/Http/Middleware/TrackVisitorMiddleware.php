@@ -33,9 +33,10 @@ class TrackVisitorMiddleware
             }
 
             // Log the user interaction with the product
-            DB::table('product_views')->insert([
+            DB::table('product_interactions')->insert([
                 'visitor_id' => $visitorId,
                 'product_id' => $productId,
+                'action' => 'viewed', // Assuming the user viewed the product
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
