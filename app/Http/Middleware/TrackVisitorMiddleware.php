@@ -12,29 +12,28 @@ class TrackVisitorMiddleware
     {
         // Get the IP address of the visitor
         $ip = $request->ip();
-        if ($ip !== '127.0.0.1' && $ip !== '::1') {
 
-            $visitor = DB::table('visitors')->where('ip_address', $ip)->first();
+        // Check if the visitor's IP address exists in the database
+        $visitor = DB::table('visitors')->where('ip_address', $ip)->first();
 
-            if (!$visitor) {
-
-                $visitorId = DB::table('visitors')->insertGetId([
-                    'ip_address' => $ip,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            } else {
-                $visitorId = $visitor->id;
-            }
-
-            // Log the user activity
-            DB::table('user_activities')->insert([
-                'visitor_id' => $visitorId,
-                'page_visited' => $request->path(),
+        if (!$visitor) {
+            // If the visitor's IP address does not exist, add it to the database
+            $visitorId = DB::table('visitors')->insertGetId([
+                'ip_address' => $ip,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
+        } else {
+            $visitorId = $visitor->id;
         }
+
+        // Log the user activity
+        DB::table('user_activities')->insert([
+            'visitor_id' => $visitorId,
+            'page_visited' => $request->path(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
 
         return $next($request);
     }
