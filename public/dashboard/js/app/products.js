@@ -441,6 +441,27 @@ $(document).ready(function () {
             },
         });
     });
+
+    $("#updateProductModal").on("hide.bs.modal", function () {
+        // Clear input fields
+        $("#updateProductName").val("");
+        $("#updateProductPrice").val("");
+        $("#updateProductRating").val("");
+        $("#updateProductCategory").val("");
+        $("#updateProductDescription").val("");
+        $("#updateProductLink").val("");
+
+        $("#updateImagePreview").html("");
+
+        $("#thisProductId").val("");
+
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        $("#addProductForm input[name='croppedImage']").remove();
+        $("#addProductForm input[name='_token']").remove();
+    });
 });
 // update product
 $("#updateBtnProduct").click(function () {
@@ -526,3 +547,5 @@ $("#updateBtnProduct").click(function () {
         },
     });
 });
+
+showAddProductModal;

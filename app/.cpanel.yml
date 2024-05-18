@@ -1,0 +1,33 @@
+name: Laravel_Project
+
+environment:
+  PHP_VERSION: "7.4"
+  DOCUMENT_ROOT: /public
+  LARAVEL_ENV: production
+
+directories:
+  home:
+    base: /home/saicelsl
+    subdirectories:
+      public_html: {}
+
+repository:
+  main:
+    url: https://github.com/ThishanthSmakintel/saicel_ca.git
+    branch: main
+
+tasks:
+  post_setup:
+    - cd /home/saicelsl/public_html
+    - git pull origin main
+    - composer install --no-dev --optimize-autoloader
+    - php artisan migrate --force
+    - php artisan cache:clear && php artisan config:clear && php artisan route:clear
+    - composer update
+
+ssl:
+  enabled: true
+  provider: cpanel
+
+dns:
+  provider: cpanel
