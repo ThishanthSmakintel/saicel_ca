@@ -19,33 +19,33 @@ use App\Http\Controllers\website\TrainingCoursesController_website;
 |
 */
 
+Route::middleware(['check.connection'])->group(function () {
+    // Route to show registration form
+    Route::view('register', 'auth.register')->middleware('guest')->name('register');
 
-// Route to show registration form
-Route::view('register', 'auth.register')->middleware('guest')->name('register');
+    // Route to handle registration form submission
+    Route::post('store', [RegisterController::class, 'store'])->name('register.store');
 
-// Route to handle registration form submission
-Route::post('store', [RegisterController::class, 'store'])->name('register.store');
+    // Route to home page, only accessible to authenticated users
+    Route::get('user-profile', [ProfileController::class, 'show'])->middleware('auth')->name('dashboard.user-profile');
 
-// Route to home page, only accessible to authenticated users
+    // Route to show login form
+    Route::view('login', 'auth.login')->middleware('guest')->name('login');
 
+    Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
 
-Route::get('user-profile', [ProfileController::class, 'show'])->name('dashboard.user-profile');
-// Route to show login form
-Route::view('login', 'auth.login')->middleware('guest')->name('login');
+    Route::get('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
-Route::post('authenticate', [LoginController::class, 'authenticate'])->name('authenticate');
+    Route::view('home', 'dashboard.pages.home')->middleware('auth')->name('dashboard.index');
 
-Route::get('logout', [LoginController::class, 'logout'])->name('logout');
-
-Route::view('home', 'dashboard.pages.home')->middleware('auth')->name('dashboard.index');
-
-
-Route::prefix('dashboard')->group(function () {
-    Route::get('/products', [ProductController::class, 'index'])->name('dashboard.products.viewAllProducts');
-    Route::post('/add', [ProductController::class, 'store'])->name('dashboard.products.add');
-    Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('dashboard.products.show');
-    Route::post('/product/delete/{id}', [ProductController::class, 'destroy'])->name('dashboard.products.destroy');
-    Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('dashboard.products.update');
+    // Dashboard routes with prefix
+    Route::prefix('dashboard')->middleware('auth')->group(function () {
+        Route::get('/products', [ProductController::class, 'index'])->name('dashboard.products.viewAllProducts');
+        Route::post('/add', [ProductController::class, 'store'])->name('dashboard.products.add');
+        Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('dashboard.products.show');
+        Route::post('/product/delete/{id}', [ProductController::class, 'destroy'])->name('dashboard.products.destroy');
+        Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('dashboard.products.update');
+    });
 });
 
 
