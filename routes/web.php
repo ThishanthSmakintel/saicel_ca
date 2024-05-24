@@ -9,6 +9,8 @@ use App\Http\Controllers\website\ProductController_website;
 use App\Http\Controllers\website\TrainingCoursesController_website;
 
 /*
+
+php artisan cache:clear && php artisan config:clear && php artisan route:clear
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -150,4 +152,6 @@ Route::group(['middleware' => ['track.visitor']], function () {
     Route::get('/sealing-services', [ProductController_website::class, 'showProductsSlideShow'])->name('sealing-services');
     Route::get('/products', [ProductController_website::class, 'showProducts'])->name('products');
     // fetch data in website END
+
+    Route::get('/product/{id}',  [ProductController_website::class, 'showThisProduct'])->name('showThisProduct');
 });

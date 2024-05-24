@@ -260,7 +260,7 @@
                         @endphp
                         @foreach ($productsInSlide as $product)
                             <div class="col-md-3">
-                                <a href="{{ $product->productlink }}" class="card-link">
+                                <a href="{{ route('showThisProduct', ['id' => $product->id]) }}" class="card-link">
                                     <div class="card">
                                         <div class="card-body before-image"
                                             style="font-size: 10px; background-image: url('{{ $product->image }}');">
@@ -282,8 +282,8 @@
                         @endforeach
                     </div>
                 </div>
-
             @endfor
+
         </div>
     </div>
 
