@@ -94,7 +94,7 @@
                                             {{ $product->description }}
                                         </p>
 
-                                        <a href="{{ $product->buyLink }}" class="btn btn-warning shadow-0"> Buy now </a>
+                                        <a href="{{ $product->productLink }}" class="btn btn-warning shadow-0"> Buy now </a>
 
                                         <hr />
                                     </div>
