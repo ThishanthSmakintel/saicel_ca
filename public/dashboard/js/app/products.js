@@ -224,7 +224,7 @@ $(document).ready(function () {
         var formData = new FormData();
         formData.append("_token", token);
         formData.append("id", productId);
-        // Show a confirmation dialog
+
         $.confirm({
             title: "Alert",
             content: "You are about to delete this product. Are you sure?",
@@ -233,9 +233,6 @@ $(document).ready(function () {
                     text: "Yes",
                     btnClass: "btn-red",
                     action: function () {
-                        // Create form data
-
-                        // Send AJAX request
                         $.ajax({
                             url: deleteUrl,
                             method: "POST",
@@ -329,12 +326,12 @@ $(document).ready(function () {
 $(document).ready(function () {
     var cropper;
     var image = $("#updateImagePreview");
-    var updateBtnProduct = $("#updateBtnProduct"); // Define updateBtnProduct
-    var updatedImage = false; // Flag to track if the image is updated
+    var updateBtnProduct = $("#updateBtnProduct");
+    var updatedImage = false;
 
     $("#updateProductImage").change(function () {
         updateBtnProduct.prop("disabled", true);
-        updatedImage = true; // Set flag to true when a new image is selected
+        updatedImage = true;
         var file = $(this)[0].files[0];
         var reader = new FileReader();
 
@@ -389,23 +386,19 @@ $(document).ready(function () {
         $("#updateCropImageButton").hide();
     });
 
-    // Event listener for the "Update Product" button
     $(".btnUpdateProductDetails").click(function () {
         var productId = $(this).attr("data-productId");
         console.log("productId ", productId);
         $("#thisProductId").val(productId);
-        // Show the loader
+
         $("#modalLoader").show();
 
-        // Send an AJAX request to fetch product details
         $.ajax({
             type: "GET",
             url: route("dashboard.products.show", { id: productId }),
             success: function (response) {
-                // Handle success response
                 console.log(response);
 
-                // Extract relevant data directly from the response
                 var productData = response.data.product;
                 var imageUrl = response.data.image_url;
 
@@ -419,28 +412,25 @@ $(document).ready(function () {
                 console.log("Product Link:", productData.productLink);
                 console.log("Image URL:", imageUrl);
 
-                // Set values of input fields
                 $("#updateProductName").val(productData.name);
                 $("#updateProductPrice").val(productData.price);
                 $("#updateProductRating").val(productData.rating);
                 $("#updateProductCategory").val(productData.category);
                 $("#updateProductDescription").val(productData.description);
                 $("#updateProductLink").val(productData.productLink);
-                // Set the image preview
+
                 $("#updateImagePreview").html(
                     '<img src="' +
                         imageUrl +
                         '" style="max-width: 100%;" id="fetchedProductImag">'
                 );
 
-                // Open the updateProductModal
                 $("#updateProductModal").modal("show");
             },
             error: function (error) {
                 console.log("Error:", error);
             },
             complete: function () {
-                // Hide the loader after the AJAX request is complete
                 $("#modalLoader").hide();
             },
         });
@@ -465,14 +455,13 @@ $(document).ready(function () {
         }
         $("#addProductForm input[name='croppedImage']").remove();
         $("#addProductForm input[name='_token']").remove();
-        updatedImage = false; // Reset the flag when the modal is closed
+        updatedImage = false;
     });
 
     // update product
     $("#updateBtnProduct").click(function () {
         var formData = new FormData();
 
-        // Collect data from input fields
         var productId = $("#thisProductId").val().trim();
         var name = $("#updateProductName").val().trim();
         var price = $("#updateProductPrice").val().trim();
@@ -524,17 +513,14 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             beforeSend: function () {
-                // Disable button and show loader
                 $("#updateBtnProduct").prop("disabled", true);
                 $(".buttonLoader").removeClass("d-none");
                 $("#modalLoader").show();
             },
             success: function (response) {
-                // Handle success response
                 console.log(response);
                 $(".buttonLoader").addClass("d-none");
 
-                // Show success message
                 $.alert({
                     typeAnimated: true,
                     type: "green",
@@ -558,7 +544,6 @@ $(document).ready(function () {
                 $("#updateBtnProduct").prop("disabled", false);
                 $(".buttonLoader").addClass("d-none");
 
-                // Show error message
                 $.alert({
                     typeAnimated: true,
                     type: "red",
