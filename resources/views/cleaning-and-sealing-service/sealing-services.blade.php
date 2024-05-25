@@ -209,7 +209,7 @@
     </section>
 
     <div class="card my-3">
-        <h2 class="text-center">Check out our Amazing Products</h2>
+        <h2 class="text-center">Check out similar Products</h2>
         <div class="product-slider">
             @php
                 $totalProducts = $products->count();

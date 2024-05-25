@@ -1,6 +1,6 @@
 @extends('default')
 
-@section('title', 'Our Awesome Products')
+@section('title', 'Products')
 
 @section('content')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -75,26 +75,30 @@
     </style>
 
     <div class="container">
-        <h1 class="text-center mb-4">Our Awesome Products</h1>
-        <h4 class="text-center mb-4">Explore our wide range of high-quality products</h4>
+        <h1 class="text-center mb-4">Explore our wide range of high-quality products</h1>
         <div class="row">
             @foreach ($products as $product)
                 <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <img src="{{ $product['image'] }}" class="card-img-top" alt="{{ $product['name'] }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $product['name'] }}</h5>
-                            <p class="card-price"><strong>${{ number_format($product['price'], 2) }}</strong></p>
-                            <p class="card-rating">
-                                {!! str_repeat('<i class="fas fa-star"></i>', intval($product['rating'])) .
-                                    str_repeat('<i class="far fa-star"></i>', 5 - intval($product['rating'])) !!}
-                            </p>
-                            <p class="card-category">{{ $product['category'] }}</p>
-                            <p class="card-description">{{ $product['description'] }}</p>
+                    <a href="{{ route('showThisProduct', ['id' => $product->id]) }}" class="card-link">
+                        <div class="card">
+                            <a href="{{ route('showThisProduct', ['id' => $product->id]) }}" class="card-link">
+                                <img src="{{ $product['image'] }}" class="card-img-top" alt="{{ $product['name'] }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $product['name'] }}</h5>
+                                    <p class="card-price"><strong>${{ number_format($product['price'], 2) }}</strong></p>
+                                    <p class="card-rating">
+                                        {!! str_repeat('<i class="fas fa-star"></i>', intval($product['rating'])) !!}
+                                        {!! str_repeat('<i class="far fa-star"></i>', 5 - intval($product['rating'])) !!}
+                                    </p>
+                                    <p class="card-category">{{ $product['category'] }}</p>
+                                    <p class="card-description">{{ $product['description'] }}</p>
+                                </div>
+                            </a>
                         </div>
-                    </div>
+                    </a>
                 </div>
             @endforeach
         </div>
     </div>
+
 @endsection
