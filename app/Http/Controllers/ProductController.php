@@ -168,27 +168,56 @@ class ProductController extends Controller
                 'price' => 'required|numeric',
                 'rating' => 'required|integer|min:0|max:5',
                 'category' => 'required',
-                'description' => 'required',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'description' => 'nullable',
+                'image' => 'nullable',
             ]);
 
             // Initialize imageUrl variable
             $imageUrl = $product->image;
 
             // Check if image was provided
-            if ($request->hasFile('image')) {
-                // Retrieve the uploaded image
-                $uploadedImage = $request->file('image');
+            if ($request->has('image')) {
+                $imageData = $request->input('image');
 
-                // Generate a unique image name
-                $imageName = time() . '.' . $uploadedImage->getClientOriginalExtension();
+                // Check if the image data is a Base64 encoded string
+                if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $type)) {
+                    // Extract the image type
+                    $type = strtolower($type[1]); // jpg, png, gif, etc.
 
-                // Move the uploaded image to the desired location
-                $uploadedImage->move(public_path('images/product-images/uploaded-images/'), $imageName);
+                    // Check if the provided type is supported
+                    if (!in_array($type, ['jpg', 'jpeg', 'png', 'gif', 'svg'])) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Invalid image type',
+                            'data' => null
+                        ], 400); // 400 Bad Request
+                    }
 
-                // Construct the image URL
-                $imageUrl = 'images/product-images/uploaded-images/' . $imageName;
+                    // Decode the Base64 string
+                    $imageData = substr($imageData, strpos($imageData, ',') + 1);
+                    $imageData = base64_decode($imageData);
+
+                    // Generate a unique image name
+                    $imageName = time() . '.' . $type;
+
+                    // Save the decoded image to the desired location
+                    file_put_contents(public_path('images/product-images/uploaded-images/') . $imageName, $imageData);
+
+                    // Construct the image URL
+                    $imageUrl = 'images/product-images/uploaded-images/' . $imageName;
+                } else {
+                    // Assume it's a regular file upload
+                    $uploadedImage = $request->file('image');
+
+                    // Generate a unique image name
+                    $imageName = time() . '.' . $uploadedImage->getClientOriginalExtension();
+
+                    // Move the uploaded image to the desired location
+                    $uploadedImage->move(public_path('images/product-images/uploaded-images/'), $imageName);
+
+                    // Construct the image URL
+                    $imageUrl = 'images/product-images/uploaded-images/' . $imageName;
+                }
             }
 
             $product->name = $request->input('name');

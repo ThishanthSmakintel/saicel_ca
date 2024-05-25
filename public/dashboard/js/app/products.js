@@ -330,9 +330,11 @@ $(document).ready(function () {
     var cropper;
     var image = $("#updateImagePreview");
     var updateBtnProduct = $("#updateBtnProduct"); // Define updateBtnProduct
+    var updatedImage = false; // Flag to track if the image is updated
 
     $("#updateProductImage").change(function () {
         updateBtnProduct.prop("disabled", true);
+        updatedImage = true; // Set flag to true when a new image is selected
         var file = $(this)[0].files[0];
         var reader = new FileReader();
 
@@ -426,7 +428,9 @@ $(document).ready(function () {
                 $("#updateProductLink").val(productData.productLink);
                 // Set the image preview
                 $("#updateImagePreview").html(
-                    '<img src="' + imageUrl + '" style="max-width: 100%;">'
+                    '<img src="' +
+                        imageUrl +
+                        '" style="max-width: 100%;" id="fetchedProductImag">'
                 );
 
                 // Open the updateProductModal
@@ -461,91 +465,115 @@ $(document).ready(function () {
         }
         $("#addProductForm input[name='croppedImage']").remove();
         $("#addProductForm input[name='_token']").remove();
+        updatedImage = false; // Reset the flag when the modal is closed
     });
-});
-// update product
-$("#updateBtnProduct").click(function () {
-    var formData = new FormData();
 
-    // Collect data from input fields
-    var productId = $("#thisProductId").val().trim();
-    var name = $("#updateProductName").val().trim();
-    var price = $("#updateProductPrice").val().trim();
-    var rating = $("#updateProductRating").val().trim();
-    var category = $("#updateProductCategory").val().trim();
-    var description = $("#updateProductDescription").val().trim();
-    var productLink = $("#updateProductLink").val().trim();
-    var image = $("#updateProductImage")[0].files[0];
-    var token = $("#_token").val().trim();
+    // update product
+    $("#updateBtnProduct").click(function () {
+        var formData = new FormData();
 
-    formData.append("id", productId);
-    formData.append("name", name);
-    formData.append("price", price);
-    formData.append("rating", rating);
-    formData.append("category", category);
-    formData.append("description", description);
-    formData.append("productLink", productLink);
-    formData.append("image", image);
-    formData.append("_token", token);
+        // Collect data from input fields
+        var productId = $("#thisProductId").val().trim();
+        var name = $("#updateProductName").val().trim();
+        var price = $("#updateProductPrice").val().trim();
+        var rating = $("#updateProductRating").val().trim();
+        var category = $("#updateProductCategory").val().trim();
+        var description = $("#updateProductDescription").val().trim();
+        var productLink = $("#updateProductLink").val().trim();
+        var token = $("#_token").val().trim();
 
-    $.ajax({
-        url: route("dashboard.products.update", { id: productId }),
-        method: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
-        beforeSend: function () {
-            // Disable button and show loader
-            $("#updateBtnProduct").prop("disabled", true);
-            $(".buttonLoader").removeClass("d-none");
-            $("#modalLoader").show();
-        },
-        success: function (response) {
-            // Handle success response
-            console.log(response);
-            $(".buttonLoader").addClass("d-none");
+        formData.append("id", productId);
+        formData.append("name", name);
+        formData.append("price", price);
+        formData.append("rating", rating);
+        formData.append("category", category);
+        formData.append("description", description);
+        formData.append("productLink", productLink);
+        formData.append("_token", token);
 
-            // Show success message
-            $.alert({
-                typeAnimated: true,
-                type: "green",
-                title: "Success!",
-                icon: "fas fa-check-circle",
-                content: "Product updated successfully",
-                buttons: {
-                    ok: {
-                        text: "OK",
-                        btnClass: "btn-green",
-                        action: function () {
-                            location.reload();
+        if (updatedImage) {
+            var croppedImage = $(
+                "#addProductForm input[name='croppedImage']"
+            ).val();
+            formData.append("image", croppedImage);
+        } else {
+            // Use the currently displayed image
+            var fetchedImage = document.getElementById("fetchedProductImag");
+            if (fetchedImage) {
+                // Convert the fetched image to Base64
+                var canvas = document.createElement("canvas");
+                var ctx = canvas.getContext("2d");
+                canvas.width = fetchedImage.width;
+                canvas.height = fetchedImage.height;
+                ctx.drawImage(
+                    fetchedImage,
+                    0,
+                    0,
+                    fetchedImage.width,
+                    fetchedImage.height
+                );
+                var base64Image = canvas.toDataURL("image/jpeg");
+                formData.append("image", base64Image);
+            }
+        }
+
+        $.ajax({
+            url: route("dashboard.products.update", { id: productId }),
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                // Disable button and show loader
+                $("#updateBtnProduct").prop("disabled", true);
+                $(".buttonLoader").removeClass("d-none");
+                $("#modalLoader").show();
+            },
+            success: function (response) {
+                // Handle success response
+                console.log(response);
+                $(".buttonLoader").addClass("d-none");
+
+                // Show success message
+                $.alert({
+                    typeAnimated: true,
+                    type: "green",
+                    title: "Success!",
+                    icon: "fas fa-check-circle",
+                    content: "Product updated successfully",
+                    buttons: {
+                        ok: {
+                            text: "OK",
+                            btnClass: "btn-green",
+                            action: function () {
+                                location.reload();
+                            },
                         },
                     },
-                },
-            });
-        },
-        error: function (xhr, status, error) {
-            $("#modalLoader").hide();
-            console.error(xhr.responseText);
-            $("#updateBtnProduct").prop("disabled", false);
-            $(".buttonLoader").addClass("d-none");
+                });
+            },
+            error: function (xhr, status, error) {
+                $("#modalLoader").hide();
+                console.error(xhr.responseText);
+                $("#updateBtnProduct").prop("disabled", false);
+                $(".buttonLoader").addClass("d-none");
 
-            // Show error message
-            $.alert({
-                typeAnimated: true,
-                type: "red",
-                btnClass: "btn-red",
-                title: '<i class="fas fa-exclamation-circle"></i> Error!',
-                content: "Failed to update product. Please try again.",
-                buttons: {
-                    ok: {
-                        text: "OK",
-                        btnClass: "btn-red",
-                        action: function () {},
+                // Show error message
+                $.alert({
+                    typeAnimated: true,
+                    type: "red",
+                    btnClass: "btn-red",
+                    title: '<i class="fas fa-exclamation-circle"></i> Error!',
+                    content: "Failed to update product. Please try again.",
+                    buttons: {
+                        ok: {
+                            text: "OK",
+                            btnClass: "btn-red",
+                            action: function () {},
+                        },
                     },
-                },
-            });
-        },
+                });
+            },
+        });
     });
 });
-
-showAddProductModal;
