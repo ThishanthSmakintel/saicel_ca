@@ -8,6 +8,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\website\ProductController_website;
 use App\Http\Controllers\website\TrainingCoursesController_website;
 use App\Http\Middleware\TrackVisitorMiddleware;
+use App\Http\Controllers\SSEController;
+use App\Http\Controllers\DashboardController;
+
 /*
 
 php artisan cache:clear && php artisan config:clear && php artisan route:clear
@@ -38,7 +41,12 @@ Route::middleware(['check.connection'])->group(function () {
 
     Route::get('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
-    Route::view('home', 'dashboard.pages.home')->middleware('auth')->name('dashboard.index');
+
+    Route::get('home', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index');
+
+    Route::get('/sse/visitor-count', [SSEController::class, 'sendVisitorCount'])->name('sseVisitorCount');
+    Route::get('/sse/most-visited-pages', [SSEController::class, 'sendMostVisitedPages'])->name('sseMostVisitedPages');
+    Route::get('/sse/most-visited-products', [SSEController::class, 'sendMostVisitedProducts'])->name('sseMostVisitedProducts');
 
     // Dashboard routes with prefix
     Route::prefix('dashboard')->middleware('auth')->group(function () {
@@ -159,3 +167,9 @@ Route::group(['middleware' => ['track.visitor']], function () {
 Route::get('/product/{id}', [ProductController_website::class, 'showThisProduct'])
     ->name('showThisProduct')
     ->middleware(TrackVisitorMiddleware::class);
+
+
+//sse
+Route::get('/sse/visitor-count', [SSEController::class, 'sendVisitorCount'])->name('sse.visitor-count');
+Route::get('/sse/most-visited-pages', [SSEController::class, 'sendMostVisitedPages'])->name('sse.most-visited-pages');
+Route::get('/sse/most-visited-products', [SSEController::class, 'sendMostVisitedProducts'])->name('sse.most-visited-products');

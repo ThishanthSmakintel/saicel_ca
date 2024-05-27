@@ -107,8 +107,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js?v={{ time() }}">
         </script>
         <script src="{{ asset('dashboard/js/plugins/jqueryCropImage/cropimage.js') }}?v={{ time() }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script src="{{ asset('dashboard/js/app/products.js') }}?v={{ time() }}"></script>
+        <script src="{{ asset('dashboard/js/app/sse-dashboard.js') }}?v={{ time() }}"></script>
 
 </body>
 
