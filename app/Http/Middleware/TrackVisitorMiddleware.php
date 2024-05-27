@@ -10,32 +10,42 @@ class TrackVisitorMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        // Get the IP address of the visitor
         $ip = $request->ip();
 
-        // Check if the request is coming from localhost
-        if ($ip !== '127.0.0.1' && $ip !== '::1') {
-            // Check if the visitor's IP address exists in the database
-            $visitor = DB::table('visitors')->where('ip_address', $ip)->first();
 
-            if (!$visitor) {
-                // If the visitor's IP address does not exist, add it to the database
+        if ($ip !== '127.0.0.1' && $ip !== '::1') {
+
+            $visitorId = DB::table('visitors')->where('ip_address', $ip)->value('id');
+            if (!$visitorId) {
                 $visitorId = DB::table('visitors')->insertGetId([
                     'ip_address' => $ip,
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
-            } else {
-                $visitorId = $visitor->id;
             }
 
-            // Log the user activity
-            DB::table('user_activities')->insert([
-                'visitor_id' => $visitorId,
-                'page_visited' => $request->path(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+
+            if ($request->route() && $request->route()->getName() === 'showThisProduct') {
+                $productId = $request->route('id');
+
+
+                DB::table('product_visits')->insert([
+                    'visitor_id' => $visitorId,
+                    'product_id' => $productId,
+                    'ip_address' => $ip,
+                    'visited_at' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            } else {
+
+                DB::table('user_activities')->insert([
+                    'visitor_id' => $visitorId,
+                    'page_visited' => $request->path(),
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
         }
 
         return $next($request);

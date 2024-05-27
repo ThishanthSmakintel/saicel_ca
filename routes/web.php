@@ -7,7 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\website\ProductController_website;
 use App\Http\Controllers\website\TrainingCoursesController_website;
-
+use App\Http\Middleware\TrackVisitorMiddleware;
 /*
 
 php artisan cache:clear && php artisan config:clear && php artisan route:clear
@@ -153,5 +153,9 @@ Route::group(['middleware' => ['track.visitor']], function () {
     Route::get('/products', [ProductController_website::class, 'showProducts'])->name('products');
     // fetch data in website END
 
-    Route::get('/product/{id}',  [ProductController_website::class, 'showThisProduct'])->name('showThisProduct');
+
 });
+
+Route::get('/product/{id}', [ProductController_website::class, 'showThisProduct'])
+    ->name('showThisProduct')
+    ->middleware(TrackVisitorMiddleware::class);
