@@ -3,7 +3,6 @@ $(document).ready(function () {
     let mostVisitedProductsChart;
 
     const updateMostVisitedPagesChart = (data) => {
-        // Destroy the existing chart if it exists
         if (mostVisitedPagesChart) {
             console.log("Destroying existing mostVisitedPagesChart");
             mostVisitedPagesChart.destroy();
@@ -54,7 +53,7 @@ $(document).ready(function () {
         const mostVisitedProducts = data.mostVisitedProducts;
         console.log("Most visited products data:", mostVisitedProducts);
         const productLabels = mostVisitedProducts.map(
-            (product) => product.name
+            (product) => product.product_id
         );
         console.log("Product labels:", productLabels);
         const productVisits = mostVisitedProducts.map(
@@ -90,40 +89,31 @@ $(document).ready(function () {
         });
     };
 
-    const visitorCountEventSource = new EventSource(route("sse.visitor-count"));
-    const mostVisitedPagesEventSource = new EventSource(
-        route("sse.most-visited-pages")
-    );
-    const mostVisitedProductsEventSource = new EventSource(
-        route("sse.most-visited-products")
-    );
+    const createEventSource = (url, onMessageCallback) => {
+        const eventSource = new EventSource(url);
+        eventSource.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            onMessageCallback(data);
+        };
+        eventSource.onerror = () => {
+            console.error("EventSource failed, attempting to reconnect...");
+            eventSource.close();
+            setTimeout(() => createEventSource(url, onMessageCallback), 1000);
+        };
+    };
 
-    visitorCountEventSource.onmessage = function (event) {
-        const data = JSON.parse(event.data);
+    createEventSource(route("sse.visitor-count"), (data) => {
         $("#visitorCount").text(data.visitorCount);
         console.log("Visitor count data:", data);
-    };
+    });
 
-    mostVisitedPagesEventSource.onmessage = function (event) {
-        const data = JSON.parse(event.data);
+    createEventSource(route("sse.most-visited-pages"), (data) => {
         console.log("Received most visited pages data:", data);
         updateMostVisitedPagesChart(data);
-    };
+    });
 
-    mostVisitedProductsEventSource.onmessage = function (event) {
-        const data = JSON.parse(event.data);
+    createEventSource(route("sse.most-visited-products"), (data) => {
         console.log("Received most visited products data:", data);
         updateMostVisitedProductsChart(data);
-    };
-
-    const handleError = (event) => {
-        console.error("EventSource failed:", event);
-        visitorCountEventSource.close();
-        mostVisitedPagesEventSource.close();
-        mostVisitedProductsEventSource.close();
-    };
-
-    visitorCountEventSource.onerror = handleError;
-    mostVisitedPagesEventSource.onerror = handleError;
-    mostVisitedProductsEventSource.onerror = handleError;
+    });
 });

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log; // Add this line to import the Log facade
+use Illuminate\Support\Facades\Log;
 
 class SSEController extends Controller
 {
@@ -14,20 +16,16 @@ class SSEController extends Controller
         header('Cache-Control: no-cache');
         header('Connection: keep-alive');
 
-        while (true) {
-            try {
-                $visitorCount = DB::table('visitors')->count();
-
-                echo "data: " . json_encode(['visitorCount' => $visitorCount]) . "\n\n";
-                ob_flush();
-                flush();
-            } catch (\Exception $e) {
-                // Log the exception
-                Log::error('Error occurred in sendVisitorCount:', ['exception' => $e]);
-            }
-
-            sleep(5);
+        try {
+            $visitorCount = DB::table('visitors')->count();
+            echo "data: " . json_encode(['visitorCount' => $visitorCount]) . "\n\n";
+            ob_flush();
+            flush();
+        } catch (\Exception $e) {
+            Log::error('Error occurred in sendVisitorCount:', ['exception' => $e]);
         }
+
+        sleep(5); // Simulate delay for testing purposes
     }
 
     public function sendMostVisitedPages(Request $request)
@@ -36,25 +34,22 @@ class SSEController extends Controller
         header('Cache-Control: no-cache');
         header('Connection: keep-alive');
 
-        while (true) {
-            try {
-                $mostVisitedPages = DB::table('user_activities')
-                    ->select('page_visited', DB::raw('count(*) as visits'))
-                    ->groupBy('page_visited')
-                    ->orderBy('visits', 'desc')
-                    ->take(5)
-                    ->get();
+        try {
+            $mostVisitedPages = DB::table('user_activities')
+                ->select('page_visited', DB::raw('count(*) as visits'))
+                ->groupBy('page_visited')
+                ->orderBy('visits', 'desc')
+                ->take(5)
+                ->get();
 
-                echo "data: " . json_encode(['mostVisitedPages' => $mostVisitedPages]) . "\n\n";
-                ob_flush();
-                flush();
-            } catch (\Exception $e) {
-                // Log the exception
-                Log::error('Error occurred in sendMostVisitedPages:', ['exception' => $e]);
-            }
-
-            sleep(5);
+            echo "data: " . json_encode(['mostVisitedPages' => $mostVisitedPages]) . "\n\n";
+            ob_flush();
+            flush();
+        } catch (\Exception $e) {
+            Log::error('Error occurred in sendMostVisitedPages:', ['exception' => $e]);
         }
+
+        sleep(5); // Simulate delay for testing purposes
     }
 
     public function sendMostVisitedProducts(Request $request)
@@ -63,24 +58,21 @@ class SSEController extends Controller
         header('Cache-Control: no-cache');
         header('Connection: keep-alive');
 
-        while (true) {
-            try {
-                $mostVisitedProducts = DB::table('product_visits')
-                    ->select('product_id', DB::raw('count(*) as visits'))
-                    ->groupBy('product_id')
-                    ->orderBy('visits', 'desc')
-                    ->take(5)
-                    ->get();
+        try {
+            $mostVisitedProducts = DB::table('product_visits')
+                ->select('product_id', DB::raw('count(*) as visits'))
+                ->groupBy('product_id')
+                ->orderBy('visits', 'desc')
+                ->take(5)
+                ->get();
 
-                echo "data: " . json_encode(['mostVisitedProducts' => $mostVisitedProducts]) . "\n\n";
-                ob_flush();
-                flush();
-            } catch (\Exception $e) {
-                // Log the exception
-                Log::error('Error occurred in sendMostVisitedProducts:', ['exception' => $e]);
-            }
-
-            sleep(5);
+            echo "data: " . json_encode(['mostVisitedProducts' => $mostVisitedProducts]) . "\n\n";
+            ob_flush();
+            flush();
+        } catch (\Exception $e) {
+            Log::error('Error occurred in sendMostVisitedProducts:', ['exception' => $e]);
         }
+
+        sleep(5); // Simulate delay for testing purposes
     }
 }
