@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers;
+<?Php
 
 namespace App\Http\Controllers;
 
@@ -12,67 +10,47 @@ class SSEController extends Controller
 {
     public function sendVisitorCount(Request $request)
     {
-        header('Content-Type: text/event-stream');
-        header('Cache-Control: no-cache');
-        header('Connection: keep-alive');
-
         try {
-            $visitorCount = DB::table('visitors')->count();
-            echo "data: " . json_encode(['visitorCount' => $visitorCount]) . "\n\n";
-            ob_flush();
-            flush();
+            $visitorCount = DB::table('user_activities')->count();
+            return response()->json(['visitorCount' => $visitorCount]);
         } catch (\Exception $e) {
             Log::error('Error occurred in sendVisitorCount:', ['exception' => $e]);
+            return response()->json(['error' => 'Failed to fetch visitor count', 'exception' => $e->getMessage()], 500);
         }
-
-        sleep(5); // Simulate delay for testing purposes
     }
 
-    public function sendMostVisitedPages(Request $request)
+    public function readMostVisitedPages(Request $request)
     {
-        header('Content-Type: text/event-stream');
-        header('Cache-Control: no-cache');
-        header('Connection: keep-alive');
-
         try {
             $mostVisitedPages = DB::table('user_activities')
                 ->select('page_visited', DB::raw('count(*) as visits'))
                 ->groupBy('page_visited')
-                ->orderBy('visits', 'desc')
+                ->orderByDesc('visits')
                 ->take(5)
                 ->get();
 
-            echo "data: " . json_encode(['mostVisitedPages' => $mostVisitedPages]) . "\n\n";
-            ob_flush();
-            flush();
+            return response()->json(['mostVisitedPages' => $mostVisitedPages]);
         } catch (\Exception $e) {
-            Log::error('Error occurred in sendMostVisitedPages:', ['exception' => $e]);
+            Log::error('Error occurred in readMostVisitedPages:', ['exception' => $e]);
+            return response()->json(['error' => 'Failed to fetch most visited pages', 'exception' => $e->getMessage()], 500);
         }
-
-        sleep(5); // Simulate delay for testing purposes
     }
 
-    public function sendMostVisitedProducts(Request $request)
+    public function productVisitStatus(Request $request)
     {
-        header('Content-Type: text/event-stream');
-        header('Cache-Control: no-cache');
-        header('Connection: keep-alive');
-
         try {
-            $mostVisitedProducts = DB::table('product_visits')
-                ->select('product_id', DB::raw('count(*) as visits'))
-                ->groupBy('product_id')
-                ->orderBy('visits', 'desc')
-                ->take(5)
+
+            $productVisitStatus = DB::table('products')
+                ->leftJoin('product_visits', 'products.id', '=', 'product_visits.product_id')
+                ->select('products.id', 'products.name', DB::raw('COUNT(product_visits.id) AS visit_status'))
+                ->groupBy('products.id', 'products.name')
+                ->orderByDesc('visit_status')
                 ->get();
 
-            echo "data: " . json_encode(['mostVisitedProducts' => $mostVisitedProducts]) . "\n\n";
-            ob_flush();
-            flush();
+            return response()->json(['productVisitStatus' => $productVisitStatus]);
         } catch (\Exception $e) {
-            Log::error('Error occurred in sendMostVisitedProducts:', ['exception' => $e]);
+            Log::error('Error occurred in productVisitStatus:', ['exception' => $e]);
+            return response()->json(['error' => 'Failed to fetch product visit status', 'exception' => $e->getMessage()], 500);
         }
-
-        sleep(5); // Simulate delay for testing purposes
     }
 }

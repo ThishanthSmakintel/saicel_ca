@@ -2,23 +2,14 @@ $(document).ready(function () {
     let mostVisitedPagesChart;
     let mostVisitedProductsChart;
 
-    const updateMostVisitedPagesChart = (data) => {
-        if (mostVisitedPagesChart) {
-            console.log("Destroying existing mostVisitedPagesChart");
-            mostVisitedPagesChart.destroy();
-        }
-
+    const createMostVisitedPagesChart = (data) => {
         const mostVisitedPages = data.mostVisitedPages;
-        console.log("Most visited pages data:", mostVisitedPages);
         const pageLabels = mostVisitedPages.map((page) => page.page_visited);
-        console.log("Page labels:", pageLabels);
         const pageVisits = mostVisitedPages.map((page) => page.visits);
-        console.log("Page visits:", pageVisits);
 
         const ctx = document
             .getElementById("mostVisitedPagesChart")
             .getContext("2d");
-        console.log("Creating new mostVisitedPagesChart");
         mostVisitedPagesChart = new Chart(ctx, {
             type: "bar",
             data: {
@@ -43,35 +34,25 @@ $(document).ready(function () {
         });
     };
 
-    const updateMostVisitedProductsChart = (data) => {
-        // Destroy the existing chart if it exists
-        if (mostVisitedProductsChart) {
-            console.log("Destroying existing mostVisitedProductsChart");
-            mostVisitedProductsChart.destroy();
-        }
-
+    const createMostVisitedProductsChart = (data) => {
         const mostVisitedProducts = data.mostVisitedProducts;
-        console.log("Most visited products data:", mostVisitedProducts);
         const productLabels = mostVisitedProducts.map(
-            (product) => product.product_id
+            (product) => product.name
         );
-        console.log("Product labels:", productLabels);
         const productVisits = mostVisitedProducts.map(
-            (product) => product.visits
+            (product) => product.visit_status
         );
-        console.log("Product visits:", productVisits);
 
         const ctx = document
             .getElementById("mostVisitedProductsChart")
             .getContext("2d");
-        console.log("Creating new mostVisitedProductsChart");
         mostVisitedProductsChart = new Chart(ctx, {
             type: "bar",
             data: {
                 labels: productLabels,
                 datasets: [
                     {
-                        label: "Visits",
+                        label: "Visit Status",
                         data: productVisits,
                         backgroundColor: "rgba(255, 99, 132, 0.2)",
                         borderColor: "rgba(255, 99, 132, 1)",
@@ -89,31 +70,72 @@ $(document).ready(function () {
         });
     };
 
-    const createEventSource = (url, onMessageCallback) => {
-        const eventSource = new EventSource(url);
-        eventSource.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            onMessageCallback(data);
-        };
-        eventSource.onerror = () => {
-            console.error("EventSource failed, attempting to reconnect...");
-            eventSource.close();
-            setTimeout(() => createEventSource(url, onMessageCallback), 1000);
-        };
+    const fetchData = (routeName, callback) => {
+        const url = route(routeName);
+        console.log("Fetching data from URL:", url);
+        fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Received data from URL:", url, data);
+                callback(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching data from URL:", url, error);
+            });
     };
 
-    createEventSource(route("sse.visitor-count"), (data) => {
-        $("#visitorCount").text(data.visitorCount);
-        console.log("Visitor count data:", data);
-    });
+    const fetchVisitorCount = () => {
+        fetchData("sse.visitor-count", (data) => {
+            console.log("Received visitor count data:", data);
+            $("#visitorCount").text(data.visitorCount);
+        });
+    };
 
-    createEventSource(route("sse.most-visited-pages"), (data) => {
-        console.log("Received most visited pages data:", data);
-        updateMostVisitedPagesChart(data);
-    });
+    const fetchMostVisitedPages = () => {
+        fetchData("sse.most-visited-pages", (data) => {
+            console.log("Received most visited pages data:", data);
+            if (!mostVisitedPagesChart) {
+                createMostVisitedPagesChart(data);
+            } else {
+                const mostVisitedPages = data.mostVisitedPages;
+                const pageLabels = mostVisitedPages.map(
+                    (page) => page.page_visited
+                );
+                const pageVisits = mostVisitedPages.map((page) => page.visits);
+                mostVisitedPagesChart.data.labels = pageLabels;
+                mostVisitedPagesChart.data.datasets[0].data = pageVisits;
+                mostVisitedPagesChart.update();
+            }
+        });
+    };
 
-    createEventSource(route("sse.most-visited-products"), (data) => {
-        console.log("Received most visited products data:", data);
-        updateMostVisitedProductsChart(data);
-    });
+    const fetchMostVisitedProducts = () => {
+        fetchData("sse.productVisitStatus", (data) => {
+            console.log("Received most visited products data:", data);
+            if (!mostVisitedProductsChart) {
+                createMostVisitedProductsChart(data);
+            } else {
+                const mostVisitedProducts = data.mostVisitedProducts;
+                const productLabels = mostVisitedProducts.map(
+                    (product) => product.name
+                );
+                const productVisits = mostVisitedProducts.map(
+                    (product) => product.visit_status
+                );
+                mostVisitedProductsChart.data.labels = productLabels;
+                mostVisitedProductsChart.data.datasets[0].data = productVisits;
+                mostVisitedProductsChart.update();
+            }
+        });
+    };
+
+    // Fetch data initially
+    fetchVisitorCount();
+    fetchMostVisitedPages();
+    fetchMostVisitedProducts();
+
+    // Set intervals to fetch data every 15 seconds
+    setInterval(fetchVisitorCount, 15000);
+    setInterval(fetchMostVisitedPages, 15000);
+    setInterval(fetchMostVisitedProducts, 15000);
 });

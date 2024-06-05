@@ -56,6 +56,8 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    'live_server_url' => env('LIVE_SERVER_URL', 'https://saicel.ca/'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

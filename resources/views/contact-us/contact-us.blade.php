@@ -7,8 +7,8 @@
     <section id="main-container" class="main-container">
         <div class="container">
 
-            <div class="row justify-content-center"> <!-- Center content -->
-                <div class="col-md-8"> <!-- Adjust column width as needed -->
+            <div class="row justify-content-center">
+                <div class="col-md-8">
                     <div class="card">
                         <div class="card-body">
 
@@ -17,7 +17,7 @@
                                 <h3 class="section-sub-title">Find Our Locations</h3>
                             </div>
 
-                            <div class="row justify-content-center"> <!-- Center the card -->
+                            <div class="row justify-content-center">
                                 <div class="col-md-6">
                                     <div class="ts-service-box-bg text-center h-100">
                                         <span class="ts-service-icon icon-round">
@@ -29,57 +29,56 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- 1st row end -->
+                            </div>
 
                             <div class="gap-60"></div>
 
                             <div class="row">
                                 <div class="col-md-12">
                                     <h3 class="column-title">We'd Love to Hear From You</h3>
-                                    <!-- contact form works with formspree.io  -->
-                                    <!-- contact form activation doc: https://docs.themefisher.com/constra/contact-form/ -->
-                                    <form id="contact-form" action="#" method="post" role="form">
-                                        <div class="error-container"></div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Name</label>
-                                                    <input class="form-control form-control-name" name="name"
-                                                        id="name" placeholder="" type="text" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Email</label>
-                                                    <input class="form-control form-control-email" name="email"
-                                                        id="email" placeholder="" type="email" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label>Subject</label>
-                                                    <input class="form-control form-control-subject" name="subject"
-                                                        id="subject" placeholder="" required>
-                                                </div>
+                                    @csrf
+                                    <div class="error-container"></div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="name">Name</label>
+                                                <input class="form-control" name="name" id="name" type="text"
+                                                    required>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Message</label>
-                                            <textarea class="form-control form-control-message" name="message" id="message" placeholder="" rows="10"
-                                                required></textarea>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <input class="form-control" name="email" id="email" type="email"
+                                                    required>
+                                            </div>
                                         </div>
-                                        <div class="text-center"> <!-- Center button -->
-                                            <button class="btn btn-primary solid blank" type="submit">Send Message</button>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="subject">Subject</label>
+                                                <input class="form-control" name="subject" id="subject" required>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="message">Message</label>
+                                        <textarea class="form-control" name="message" id="message" rows="10" required></textarea>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-primary" id="btnContactUs">Send Message</button>
+                                    </div>
                                     </form>
                                 </div>
-                            </div><!-- Content row -->
-                        </div><!-- Card body end -->
-                    </div><!-- Card end -->
-                </div><!-- Column end -->
-            </div><!-- Row end -->
+                            </div>
 
-        </div><!-- Container end -->
-    </section><!-- Main container end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
 
 @endsection

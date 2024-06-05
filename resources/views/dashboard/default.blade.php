@@ -110,7 +110,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script src="{{ asset('dashboard/js/app/products.js') }}?v={{ time() }}"></script>
-        <script src="{{ asset('dashboard/js/app/sse-dashboard.js') }}?v={{ time() }}"></script>
+        <script src="{{ asset('dashboard/js/app/sse-dashboard.js') }}"></script>
 
 </body>
 

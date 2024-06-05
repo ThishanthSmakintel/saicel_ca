@@ -7,9 +7,11 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\website\ProductController_website;
 use App\Http\Controllers\website\TrainingCoursesController_website;
+
 use App\Http\Middleware\TrackVisitorMiddleware;
 use App\Http\Controllers\SSEController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\website\ServiceController_website;
 
 /*
 
@@ -42,11 +44,8 @@ Route::middleware(['check.connection'])->group(function () {
     Route::get('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 
 
-    Route::get('home', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard.index');
+    Route::view('/home', 'dashboard.pages.home')->middleware('auth')->name('dashboard.index');
 
-    Route::get('/sse/visitor-count', [SSEController::class, 'sendVisitorCount'])->name('sseVisitorCount');
-    Route::get('/sse/most-visited-pages', [SSEController::class, 'sendMostVisitedPages'])->name('sseMostVisitedPages');
-    Route::get('/sse/most-visited-products', [SSEController::class, 'sendMostVisitedProducts'])->name('sseMostVisitedProducts');
 
     // Dashboard routes with prefix
     Route::prefix('dashboard')->middleware('auth')->group(function () {
@@ -56,6 +55,10 @@ Route::middleware(['check.connection'])->group(function () {
         Route::post('/product/delete/{id}', [ProductController::class, 'destroy'])->name('dashboard.products.destroy');
         Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('dashboard.products.update');
     });
+
+    Route::get('/sse/visitor-count', [SSEController::class, 'sendVisitorCount'])->name('sse.visitor-count');
+    Route::get('/sse/most-visited-pages', [SSEController::class, 'readMostVisitedPages'])->name('sse.most-visited-pages');
+    Route::get('/sse/most-visited-products', [SSEController::class, 'productVisitStatus'])->name('sse.productVisitStatus');
 });
 
 
@@ -134,9 +137,12 @@ Route::group(['middleware' => ['track.visitor']], function () {
     })->name('cleaning-services');
 
     // Contact Us
-    Route::get('/contact-us', function () {
-        return view('contact-us.contact-us');
-    })->name('contact-us');
+
+
+
+
+    Route::get('/contact-us', [ServiceController_website::class, 'index'])->name('contact-us');
+
 
     //Sealing Service Routes
 
@@ -170,6 +176,3 @@ Route::get('/product/{id}', [ProductController_website::class, 'showThisProduct'
 
 
 //sse
-Route::get('/sse/visitor-count', [SSEController::class, 'sendVisitorCount'])->name('sse.visitor-count');
-Route::get('/sse/most-visited-pages', [SSEController::class, 'sendMostVisitedPages'])->name('sse.most-visited-pages');
-Route::get('/sse/most-visited-products', [SSEController::class, 'sendMostVisitedProducts'])->name('sse.most-visited-products');
