@@ -8,6 +8,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\website\ProductController_website;
 use App\Http\Controllers\website\TrainingCoursesController_website;
 use App\Http\Middleware\TrackVisitorMiddleware;
+use App\Http\Controllers\LocationController;
+
+Route::get('/locationFinder', [LocationController::class, 'index'])->name('search.index');
+Route::post('/search', [LocationController::class, 'search'])->name('search.post');
+
+
 /*
 
 php artisan cache:clear && php artisan config:clear && php artisan route:clear
