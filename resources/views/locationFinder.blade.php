@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Page</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
     <style>
-        /* Adjustments for footer */
         body {
             display: flex;
             flex-direction: column;
@@ -28,10 +29,8 @@
     <div class="container mt-5">
         <h1 class="mb-4 text-center">City Search</h1>
 
-
         <div class="input-group mb-3">
-            <input type="text" class="form-control" id="searchQuery" placeholder="Enter your search query">
-            <button class="btn btn-primary" type="button" id="searchButton">Search</button>
+            <input type="text" class="form-control" id="searchQuery" placeholder="Enter city, district, or province">
             <div class="input-group-append">
                 <span class="input-group-text" id="loadingSpinner" style="display: none;">
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -40,24 +39,34 @@
             </div>
         </div>
 
+        <input type="hidden" id="searchData" value="">
+
         <div id="searchResults" class="mt-4">
             <div id="errorDiv" class="alert alert-danger" style="display: none;"></div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Name (EN)</th>
-                        <th>Name (SI)</th>
-                        <th>Name (TA)</th>
-                        <th>Sub Name (EN)</th>
-                        <th>Sub Name (SI)</th>
-                        <th>Sub Name (TA)</th>
-                    </tr>
-                </thead>
-                <tbody id="resultsTableBody">
-                    <!-- Search results will be dynamically added here -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Name (EN)</th>
+                            <th>Name (SI)</th>
+                            <th>Name (TA)</th>
+                            <th>District (EN)</th>
+                            <th>District (SI)</th>
+                            <th>District (TA)</th>
+                            <th>Province (EN)</th>
+                            <th>Province (SI)</th>
+                            <th>Province (TA)</th>
+                            <th>Sub Name (EN)</th>
+                            <th>Sub Name (SI)</th>
+                            <th>Sub Name (TA)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                        <!-- Search results  -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -67,80 +76,127 @@
         </div>
     </footer>
 
-    <!-- Include jQuery library -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            $('#searchButton').click(function() {
-                var query = $('#searchQuery').val();
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+</html>
+
+
+<script>
+    $(document).ready(function() {
+        fetchData();
+
+        $('#searchQuery').on('input', function() {
+            var query = $(this).val().trim(); // Trim the search query
+            if (query === '') {
+                $('#resultsTableBody').empty(); // Clear table if search query is empty
+            } else {
                 search(query);
-            });
+            }
         });
+    });
 
-        function search(query) {
-            var formData = new FormData();
-            formData.append('query', query);
-            formData.append('_token', '{{ csrf_token() }}'); // Reintroduced CSRF token
-
-            // Show loading spinner and hide search input
+    async function fetchData() {
+        try {
             $('#loadingSpinner').show();
-            $('#searchQuery').prop('disabled', true);
-            $('#searchButton').prop('disabled', true);
-
-            $.ajax({
+            const response = await $.ajax({
                 url: "{{ route('search.post') }}",
                 type: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    if (response.length === 0) {
-                        displayErrorMessage('No results found.');
-                    } else {
-                        displayResults(response);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                    displayErrorMessage('An error occurred. Please try again later.');
-                },
-                complete: function() {
-                    // Hide loading spinner and show search input
-                    $('#loadingSpinner').hide();
-                    $('#searchQuery').prop('disabled', false);
-                    $('#searchButton').prop('disabled', false);
+                data: {
+                    _token: '{{ csrf_token() }}'
                 }
             });
+            $('#searchData').val(JSON.stringify(response));
+            displaySuccessMessage('Data fetched successfully.');
+            $('#searchQuery').prop('disabled', false);
+        } catch (error) {
+            console.error(error);
+            displayErrorMessage('An error occurred while fetching data. Please try again later.');
+            $('#searchQuery').prop('disabled', true);
+        } finally {
+            $('#loadingSpinner').hide();
         }
+    }
 
-        function displayResults(results) {
-            var tableBody = $('#resultsTableBody');
-            tableBody.empty(); // Clear previous results
+    function search(query) {
+        var searchData = JSON.parse($('#searchData').val());
+        console.log('Search data:', searchData);
 
-            $.each(results, function(index, result) {
-                var row = '<tr>' +
-                    '<td>' + result.type + '</td>' +
-                    '<td>' + result.name_en + '</td>' +
-                    '<td>' + result.name_si + '</td>' +
-                    '<td>' + result.name_ta + '</td>' +
-                    '<td>' + (result.sub_name_en || 'Data not available') + '</td>' +
-                    '<td>' + (result.sub_name_si || 'Data not available') + '</td>' +
-                    '<td>' + (result.sub_name_ta || 'Data not available') + '</td>' +
-                    '</tr>';
-                tableBody.append(row);
-            });
+        var results = searchData.filter(function(item) {
+            return (item.city_name_en && item.city_name_en.toLowerCase().includes(query.toLowerCase())) ||
+                (item.city_name_si && item.city_name_si.toLowerCase().includes(query.toLowerCase())) ||
+                (item.city_name_ta && item.city_name_ta.toLowerCase().includes(query.toLowerCase())) ||
+                (item.district_name_en && item.district_name_en.toLowerCase().includes(query.toLowerCase())) ||
+                (item.district_name_si && item.district_name_si.toLowerCase().includes(query.toLowerCase())) ||
+                (item.district_name_ta && item.district_name_ta.toLowerCase().includes(query.toLowerCase())) ||
+                (item.province_name_en && item.province_name_en.toLowerCase().includes(query.toLowerCase())) ||
+                (item.province_name_si && item.province_name_si.toLowerCase().includes(query.toLowerCase())) ||
+                (item.province_name_ta && item.province_name_ta.toLowerCase().includes(query.toLowerCase()));
+        });
 
-            $('#errorDiv').hide(); // Hide error message if displayed
+        console.log('Results:', results);
+
+        if (results.length === 0) {
+            console.log('No results found.');
+            displayErrorMessage('No results found.');
+        } else {
+            console.log('Displaying results:', results);
+            displayResults(results);
         }
+    }
 
-        function displayErrorMessage(message) {
-            var errorDiv = $('#errorDiv');
-            errorDiv.text(message);
-            errorDiv.show(); // Show error message
-            $('#resultsTableBody').empty(); // Clear previous results
+    function displayResults(results) {
+        var tableBody = $('#resultsTableBody');
+        tableBody.empty();
+
+        $.each(results, function(index, result) {
+            var row = '<tr>' +
+                '<td>' + 'City' + '</td>' +
+                '<td>' + result.city_name_en + '</td>' +
+                '<td>' + result.city_name_si + '</td>' +
+                '<td>' + result.city_name_ta + '</td>' +
+                '<td>' + result.district_name_en + '</td>' +
+                '<td>' + result.district_name_si + '</td>' +
+                '<td>' + result.district_name_ta + '</td>' +
+                '<td>' + result.province_name_en + '</td>' +
+                '<td>' + result.province_name_si + '</td>' +
+                '<td>' + result.province_name_ta + '</td>' +
+                '<td>' + (result.sub_name_en || 'Data not available') + '</td>' +
+                '<td>' + (result.sub_name_si || 'Data not available') + '</td>' +
+                '<td>' + (result.sub_name_ta || 'Data not available') + '</td>' +
+                '</tr>';
+            tableBody.append(row);
+        });
+
+        $('#errorDiv').hide();
+    }
+
+    function displayErrorMessage(message) {
+        var errorDiv = $('#errorDiv');
+        errorDiv.text(message);
+        errorDiv.show();
+        $('#resultsTableBody').empty();
+    }
+
+    function displaySuccessMessage(message) {
+        var successDiv = $('#successDiv');
+        if (!successDiv.length) {
+            successDiv = $('<div class="alert alert-success" id="successDiv"></div>');
+            $('.container').prepend(successDiv);
         }
-    </script>
+        successDiv.text(message);
+        successDiv.show();
+        setTimeout(function() {
+            successDiv.hide();
+        }, 3000);
+    }
+</script>
+
+
 </body>
 
 </html>

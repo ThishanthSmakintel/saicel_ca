@@ -13,63 +13,38 @@ class LocationController extends Controller
     {
         return view('locationFinder');
     }
+
     public function search(Request $request)
     {
         $query = $request->input('query');
 
-        $provinces = Province::where('name_en', 'like', "%{$query}%")
-            ->orWhere('name_si', 'like', "%{$query}%")
-            ->orWhere('name_ta', 'like', "%{$query}%")
+        $results = City::join('districts', 'cities.district_id', '=', 'districts.id')
+            ->join('provinces', 'districts.province_id', '=', 'provinces.id')
+            ->select(
+                'cities.id AS city_id',
+                'provinces.name_en AS province_name_en',
+                'provinces.name_ta AS province_name_ta',
+                'provinces.name_si AS province_name_si',
+                'cities.name_en AS city_name_en',
+                'cities.name_si AS city_name_si',
+                'cities.name_ta AS city_name_ta',
+                'cities.sub_name_en',
+                'cities.sub_name_si',
+                'cities.sub_name_ta',
+                'cities.postcode',
+                'cities.latitude',
+                'cities.longitude',
+                'districts.id AS district_id',
+                'districts.name_en AS district_name_en',
+                'districts.name_si AS district_name_si',
+                'districts.name_ta AS district_name_ta',
+                'provinces.id AS province_id'
+            )
+            ->orderBy('provinces.name_en')
+            ->orderBy('provinces.name_ta')
+            ->orderBy('provinces.name_si')
             ->get();
-
-        $districts = District::where('name_en', 'like', "%{$query}%")
-            ->orWhere('name_si', 'like', "%{$query}%")
-            ->orWhere('name_ta', 'like', "%{$query}%")
-            ->get();
-
-        $cities = City::where('name_en', 'like', "%{$query}%")
-            ->orWhere('name_si', 'like', "%{$query}%")
-            ->orWhere('name_ta', 'like', "%{$query}%")
-            ->orWhere('sub_name_en', 'like', "%{$query}%")
-            ->orWhere('sub_name_si', 'like', "%{$query}%")
-            ->orWhere('sub_name_ta', 'like', "%{$query}%")
-            ->get();
-
-        $results = [];
-
-        foreach ($provinces as $province) {
-            $results[] = $this->formatResult($province, 'province');
-        }
-
-        foreach ($districts as $district) {
-            $results[] = $this->formatResult($district, 'district');
-        }
-
-        foreach ($cities as $city) {
-            $results[] = $this->formatResult($city, 'city');
-        }
 
         return response()->json($results);
-    }
-
-    private function formatResult($item, $type)
-    {
-        $name_en = $item->name_en ?? 'Data not available in DB';
-        $name_si = $item->name_si ?? 'Data not available in DB';
-        $name_ta = $item->name_ta ?? 'Data not available in DB';
-        $sub_name_en = $item->sub_name_en ?? 'Data not available in DB';
-        $sub_name_si = $item->sub_name_si ?? 'Data not available in DB';
-        $sub_name_ta = $item->sub_name_ta ?? 'Data not available in DB';
-
-        return [
-            'type' => $type,
-            'name_en' => $name_en,
-            'name_si' => $name_si,
-            'name_ta' => $name_ta,
-            'sub_name_en' => $sub_name_en,
-            'sub_name_si' => $sub_name_si,
-            'sub_name_ta' => $sub_name_ta,
-            'details' => $item,
-        ];
     }
 }
