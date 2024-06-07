@@ -91,9 +91,9 @@
         fetchData();
 
         $('#searchQuery').on('input', function() {
-            var query = $(this).val().trim(); // Trim the search query
+            var query = $(this).val().trim();
             if (query === '') {
-                $('#resultsTableBody').empty(); // Clear table if search query is empty
+                $('#resultsTableBody').empty();
             } else {
                 search(query);
             }
