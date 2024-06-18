@@ -12,6 +12,7 @@ use App\Http\Middleware\TrackVisitorMiddleware;
 use App\Http\Controllers\SSEController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\website\ServiceController_website;
+use App\Http\Controllers\website\MessageController;
 
 /*
 
@@ -141,7 +142,6 @@ Route::group(['middleware' => ['track.visitor']], function () {
 
 
 
-    Route::get('/contact-us', [ServiceController_website::class, 'index'])->name('contact-us');
 
 
     //Sealing Service Routes
@@ -165,7 +165,16 @@ Route::group(['middleware' => ['track.visitor']], function () {
     Route::get('/training', [TrainingCoursesController_website::class, 'fetchTrainingData'])->name('training');
     Route::get('/sealing-services', [ProductController_website::class, 'showProductsSlideShow'])->name('sealing-services');
     Route::get('/products', [ProductController_website::class, 'showProducts'])->name('products');
-    // fetch data in website END
+
+
+
+    
+    Route::get('/contact-us', [ServiceController_website::class, 'showServices'])->name("contact-us");
+    Route::post('/contact-us', [ServiceController_website::class, 'submitMessage'])->name('contact-us.submit');
+
+
+
+// fetch data in website END
 
 
 });

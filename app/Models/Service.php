@@ -16,6 +16,5 @@ class Service extends Model
         'description',
         'status',
         'created_by',
-
     ];
 }
