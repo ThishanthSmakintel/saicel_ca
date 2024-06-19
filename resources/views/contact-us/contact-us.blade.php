@@ -48,10 +48,6 @@
                                                 required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="subject">Subject</label>
-                                            <input class="form-control" name="subject" id="subject" required>
-                                        </div>
-                                        <div class="form-group">
                                             <label for="service">Service</label>
                                             <select class="form-control" name="service" id="service" required>
                                                 <option value="">Select a service</option>

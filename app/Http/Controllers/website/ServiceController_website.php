@@ -44,33 +44,27 @@ class ServiceController_website extends Controller
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
-                'subject' => 'required|string|max:255',
-                'service' => 'required|string|max:255',
+                'service' => 'required|exists:services,id',
                 'message' => 'required|string',
             ]);
 
-            // Ensure data types are strings
-            $name = (string) $validatedData['name'];
-            $email = (string) $validatedData['email'];
-            $subject = (string) $validatedData['subject'];
-            $service = (string) $validatedData['service'];
-            $messageContent = (string) $validatedData['message'];
+            // Extract validated data
+            $name = $validatedData['name'];
+            $email = $validatedData['email'];
+            $subject = "Welcome to saicel.ca - Thank you for your inquiry";
+            $serviceId = $validatedData['service'];
+            $messageContent = $validatedData['message'];
 
-            // Log validated data
-            // Log::info('Validated data:', [
-            //     'name' => $name,
-            //     'email' => $email,
-            //     'subject' => $subject,
-            //     'service' => $service,
-            //     'message' => $messageContent,
-            // ]);
+            // Fetch the service based on ID
+            $service = Service::findOrFail($serviceId);
+            $serviceName = $service->service_name; 
 
             // Send email using Mailable
             Mail::to($email)->send(new ContactFormSubmitted(
                 $name,
                 $email,
                 $subject,
-                $service,
+                $serviceName,
                 $messageContent
             ));
 

@@ -40,7 +40,7 @@
             line-height: 1.6;
         }
         .status {
-            background-color: #8ACA2B; /* Green color for status */
+            background-color: #8ACA2B; 
             color: #fff;
             font-weight: bold;
             text-align: center;
@@ -118,10 +118,10 @@
             Query Status: Open
         </div>
         
-        <p>Thank you for reaching out to us! We have received your message regarding the subject: "<strong>{{ $subject }}</strong>".</p>
+        <p>Thank you for reaching out to us! We have received your message"</p>
         
         @if (!empty($service))
-            <p>We understand that you have inquiries about our "<strong>{{ $service }}</strong>" service. Our team is currently reviewing your request and will contact you as soon as possible.</p>
+            <p>We understand that you have inquiries about our "<strong>{{ $service }}</strong>" service. Our team is currently received your request and The team will contact you as soon as possible.</p>
         @endif
         
         <p>For your reference, here is a copy of the message you sent us:</p>
