@@ -5,6 +5,7 @@ namespace App\Http\Controllers\website;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
+use App\Models\Message; 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactFormSubmitted;
@@ -26,10 +27,8 @@ class ServiceController_website extends Controller
 
             return view('contact-us.contact-us', ['services' => $services]);
         } catch (\Exception $e) {
-            // Log the error
             Log::error('Error in showServices method: ' . $e->getMessage());
 
-            // Handle the error gracefully, maybe return a view with an error message
             return view('error')->with('message', 'Failed to fetch services');
         }
     }
@@ -57,19 +56,30 @@ class ServiceController_website extends Controller
 
             // Fetch the service based on ID
             $service = Service::findOrFail($serviceId);
-            $serviceName = $service->service_name; 
+            $serviceName = $service->service_name;
 
             // Send email using Mailable
             Mail::to($email)->send(new ContactFormSubmitted(
                 $name,
                 $email,
                 $subject,
-                $serviceName,
+                $serviceId,
                 $messageContent
             ));
 
             // Log success message
             Log::info('Message submitted successfully.');
+
+            // Save message to messages table
+            $message = new Message();
+            $message->name = $name;
+            $message->email = $email;
+            $message->subject = $subject;
+            $message->service = $serviceName;
+            $message->message = $messageContent;
+            $message->save();
+
+            Log::info('Saved message to database.');
 
             Log::info('Service Controller END: submitMessage');
             Log::info('-------------------------------------------------------------------------');
