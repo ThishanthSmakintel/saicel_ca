@@ -22,6 +22,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('dashboard.received-messages') }}">
+                        <img class="mr-2" src="{{ asset('dashboard/img/Group 1380.png') }}" />
+                        Received Messages
+                    </a>
+                </li>
+
                 {{-- <li class="nav-item">
                     <a class="nav-link" href="{{ url('/flat') }}">
                         <img class="mr-2" src="{{ asset('dashboard/img/Group 1381.png') }}" />

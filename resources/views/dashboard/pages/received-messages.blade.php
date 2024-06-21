@@ -1,0 +1,68 @@
+@extends('dashboard.default')
+
+@section('title', 'Saicel Dashboard')
+
+@section('styles')
+    <!-- Include DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <style>
+        .card {
+            margin-top: 20px; /* Adjust margin top as needed */
+        }
+    </style>
+@endsection
+
+@section('dashboardContent')
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h1>Received Messages</h1>
+
+            <table id="messagesTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Service</th>
+                        <th>Message</th>
+                        <th>Sent At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($messages as $message)
+                        <tr>
+                            <td>{{ $message->name }}</td>
+                            <td>{{ $message->email }}</td>
+                            <td>{{ $message->subject }}</td>
+                            <td>{{ $message->serviceName }}</td> <!-- Display serviceName instead of service -->
+                            <td>{{ $message->message }}</td>
+                            <td>{{ $message->created_at->format('d M Y, H:i:s') }}</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm">Reply</button>
+                                <button type="button" class="btn btn-outline-warning btn-sm">Change Status</button>
+                                <button type="button" class="btn btn-outline-danger btn-sm">Block User</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#messagesTable').DataTable();
+        });
+    </script>
+@endsection

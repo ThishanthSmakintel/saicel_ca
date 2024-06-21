@@ -13,6 +13,7 @@ use App\Http\Controllers\SSEController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\website\ServiceController_website;
 use App\Http\Controllers\website\MessageController;
+use App\Http\Controllers\ContactUsInquiryManagementController;
 
 /*
 
@@ -55,11 +56,17 @@ Route::middleware(['check.connection'])->group(function () {
         Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('dashboard.products.show');
         Route::post('/product/delete/{id}', [ProductController::class, 'destroy'])->name('dashboard.products.destroy');
         Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('dashboard.products.update');
+      
+
     });
 
     Route::get('/sse/visitor-count', [SSEController::class, 'sendVisitorCount'])->name('sse.visitor-count');
     Route::get('/sse/most-visited-pages', [SSEController::class, 'readMostVisitedPages'])->name('sse.most-visited-pages');
     Route::get('/sse/most-visited-products', [SSEController::class, 'productVisitStatus'])->name('sse.productVisitStatus');
+
+
+    Route::get('/show-received-messages', [ContactUsInquiryManagementController::class, 'index'])->name('dashboard.received-messages');
+    
 });
 
 

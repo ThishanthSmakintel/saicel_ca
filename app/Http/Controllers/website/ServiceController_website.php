@@ -55,6 +55,7 @@ class ServiceController_website extends Controller
             $messageContent = $validatedData['message'];
 
             // Fetch the service based on ID
+            
             $service = Service::findOrFail($serviceId);
             $serviceName = $service->service_name;
 
@@ -63,7 +64,7 @@ class ServiceController_website extends Controller
                 $name,
                 $email,
                 $subject,
-                $serviceId,
+                $serviceName,
                 $messageContent
             ));
 
@@ -75,7 +76,7 @@ class ServiceController_website extends Controller
             $message->name = $name;
             $message->email = $email;
             $message->subject = $subject;
-            $message->service = $serviceName;
+            $message->service = $serviceId;
             $message->message = $messageContent;
             $message->save();
 
