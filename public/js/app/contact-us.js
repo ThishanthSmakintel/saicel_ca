@@ -1,118 +1,68 @@
-$(document).ready(function () {
-    $("#btnContactUs").on("click", function () {
-        var name = $("#name");
-        var email = $("#email");
-        var subject = $("#subject");
-        var message = $("#message");
-        var valid = true;
+@extends('dashboard.default')
 
-        if (name.val() === "") {
-            $.alert({
-                type: "red",
-                btnClass: "btn-red",
-                title: '<i class="fas fa-exclamation-circle"></i> Error!',
-                content: "Please enter your name.",
-                onClose: function () {
-                    name.focus();
-                },
-            });
-            valid = false;
+@section('title', 'Saicel Dashboard')
+
+@section('styles')
+    <!-- Include DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <style>
+        .card {
+            margin-top: 20px; /* Adjust margin top as needed */
         }
+    </style>
+@endsection
 
-        if (email.val() === "") {
-            $.alert({
-                type: "red",
-                btnClass: "btn-red",
-                title: '<i class="fas fa-exclamation-circle"></i> Error!',
-                content: "Please enter your email.",
-                onClose: function () {
-                    email.focus();
-                },
-            });
-            valid = false;
-        }
+@section('dashboardContent')
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h1>Received Messages</h1>
 
-        if (subject.val() === "") {
-            $.alert({
-                type: "red",
-                btnClass: "btn-red",
-                title: '<i class="fas fa-exclamation-circle"></i> Error!',
-                content: "Please enter a subject.",
-                onClose: function () {
-                    subject.focus();
-                },
-            });
-            valid = false;
-        }
+            <table id="messagesTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Service</th>
+                        <th>Message</th>
+                        <th>Sent At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($messages as $message)
+                        <tr>
+                            <td>{{ $message->name }}</td>
+                            <td>{{ $message->email }}</td>
+                            <td>{{ $message->subject }}</td>
+                            <td>{{ $message->serviceName }}</td> <!-- Display serviceName instead of service -->
+                            <td>{{ $message->message }}</td>
+                            <td>{{ $message->created_at->format('d M Y, H:i:s') }}</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm">Reply</button>
+                                <button type="button" class="btn btn-outline-warning btn-sm">Change Status</button>
+                                <button type="button" class="btn btn-outline-danger btn-sm">Block User</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection
 
-        if (message.val() === "") {
-            $.alert({
-                type: "red",
-                btnClass: "btn-red",
-                title: '<i class="fas fa-exclamation-circle"></i> Error!',
-                content: "Please enter a message.",
-                onClose: function () {
-                    message.focus();
-                },
-            });
-            valid = false;
-        }
+@section('scripts')
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 
-        if (!valid) {
-            return false;
-        }
-
-        var formData = new FormData();
-        formData.append("_token", $('input[name="_token"]').val());
-        formData.append("name", name.val());
-        formData.append("email", email.val());
-        formData.append("subject", subject.val());
-        formData.append("message", message.val());
-
-        $.ajax({
-            url: route("website.contact.submit"),
-            type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
-            beforeSend: function () {
-                $("#btnContactUs").prop("disabled", true);
-                $(".buttonLoader").removeClass("d-none");
-            },
-            success: function (response) {
-                $.alert({
-                    typeAnimated: true,
-                    type: "green",
-                    title: "Success!",
-                    icon: "fas fa-check-circle",
-                    content: "Message sent successfully!",
-                    buttons: {
-                        ok: {
-                            text: "OK",
-                            btnClass: "btn-green",
-                            action: function () {
-                                setTimeout(function () {
-                                    location.reload();
-                                }, 300);
-                            },
-                        },
-                    },
-                });
-                $("#contact-form")[0].reset();
-                $("#btnContactUs").prop("disabled", false);
-                $(".buttonLoader").addClass("d-none");
-            },
-            error: function (response) {
-                $.alert({
-                    type: "red",
-                    btnClass: "btn-red",
-                    title: '<i class="fas fa-exclamation-circle"></i> Error!',
-                    content:
-                        "There was an error sending your message. Please try again later.",
-                });
-                $("#btnContactUs").prop("disabled", false);
-                $(".buttonLoader").addClass("d-none");
-            },
+    <script>
+        $(document).ready(function() {
+            $('#messagesTable').DataTable();
         });
-    });
-});
+    </script>
+@endsection

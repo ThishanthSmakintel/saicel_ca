@@ -65,7 +65,13 @@ Route::middleware(['check.connection'])->group(function () {
     Route::get('/sse/most-visited-products', [SSEController::class, 'productVisitStatus'])->name('sse.productVisitStatus');
 
 
-    Route::get('/show-received-messages', [ContactUsInquiryManagementController::class, 'index'])->name('dashboard.received-messages');
+
+
+
+// Route for rendering the view
+Route::get('/received-messages', [ContactUsInquiryManagementController::class, 'index'])->name('dashboard.received-messages');
+Route::get('/message/{id}/replies', [ContactUsInquiryManagementController::class, 'showReplies'])->name('message.replies');
+Route::post('/message/send-reply', [ContactUsInquiryManagementController::class, 'storeReply'])->name('message.storeReply');
     
 });
 

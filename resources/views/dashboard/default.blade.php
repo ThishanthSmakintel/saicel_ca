@@ -111,7 +111,9 @@
 
         <script src="{{ asset('dashboard/js/app/products.js') }}?v={{ time() }}"></script>
         <script src="{{ asset('dashboard/js/app/sse-dashboard.js') }}"></script>
-
+        <script src="{{ asset('dashboard/js/app/manage-messages.js') }}"></script>
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 </body>
 
 </html>

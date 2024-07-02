@@ -21,3 +21,6 @@
 
 <!-- Template custom -->
 <script src="{{ asset('js/script.js') }}"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.js"></script>

@@ -135,7 +135,7 @@ $(document).ready(function () {
     fetchMostVisitedProducts();
 
     // Set intervals to fetch data every 15 seconds
-    setInterval(fetchVisitorCount, 15000);
-    setInterval(fetchMostVisitedPages, 15000);
-    setInterval(fetchMostVisitedProducts, 15000);
+    setInterval(fetchVisitorCount, 150000);
+    setInterval(fetchMostVisitedPages, 150000);
+    setInterval(fetchMostVisitedProducts, 150000);
 });

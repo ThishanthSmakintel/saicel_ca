@@ -2,21 +2,22 @@
 
 @section('title', 'Saicel Dashboard')
 
-@section('styles')
-    <!-- Include DataTables CSS -->
-    <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <style>
-        .card {
-            margin-top: 20px; /* Adjust margin top as needed */
-        }
-    </style>
-@endsection
-
 @section('dashboardContent')
+<div class="content">
+    <div class="container-fluid">
 <div class="container">
     <div class="card">
         <div class="card-body">
             <h1>Received Messages</h1>
+
+            <!-- Include DataTables CSS -->
+            <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+            <style>
+                .card {
+                    margin-top: 20px; /* Adjust margin top as needed */
+                }
+            </style>
 
             <table id="messagesTable" class="table table-bordered table-striped">
                 <thead>
@@ -36,13 +37,15 @@
                             <td>{{ $message->name }}</td>
                             <td>{{ $message->email }}</td>
                             <td>{{ $message->subject }}</td>
-                            <td>{{ $message->serviceName }}</td> <!-- Display serviceName instead of service -->
+                            <td>{{ $message->serviceName }}</td>
                             <td>{{ $message->message }}</td>
                             <td>{{ $message->created_at->format('d M Y, H:i:s') }}</td>
                             <td>
-                                <button type="button" class="btn btn-outline-primary btn-sm">Reply</button>
-                                <button type="button" class="btn btn-outline-warning btn-sm">Change Status</button>
-                                <button type="button" class="btn btn-outline-danger btn-sm">Block User</button>
+                                <a class="btn btn-primary" href="{{ route('message.replies', $message->id) }}">
+                                    Reply
+                                </a>
+                                <button type="button" class="btn btn-outline-secondary btn-sm">Block User</button>
+                                <button type="button" class="btn btn-outline-danger btn-sm">Delete User</button>
                             </td>
                         </tr>
                     @endforeach
@@ -51,18 +54,19 @@
         </div>
     </div>
 </div>
-@endsection
+</div>
+</div>
 
-@section('scripts')
-    <!-- Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Include DataTables JS -->
-    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            $('#messagesTable').DataTable();
-        });
-    </script>
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        $('#messagesTable').DataTable();
+    });
+</script>
 @endsection
