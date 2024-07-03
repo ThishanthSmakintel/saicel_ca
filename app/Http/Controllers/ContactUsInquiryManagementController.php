@@ -30,8 +30,8 @@ class ContactUsInquiryManagementController extends Controller
                 // Validate if message has a service_id (assuming it's service_id)
                 if ($message->service) {
                     // Find the related service based on $message->service (assuming it's service_id)
-                    $service = Service::findOrFail($message->service);
-                    $message->serviceName = $service->service_name;
+                    $relatedService = Service::findOrFail($message->service);
+                    $message->serviceName = $relatedService->service_name;
                 } else {
                     $message->serviceName = 'Service not specified'; // Handle case where service_id is null or invalid
                 }
@@ -60,21 +60,21 @@ class ContactUsInquiryManagementController extends Controller
     {
         try {
             // Attempt to find the message with its replies
-            $message = Message::with('replies')->findOrFail($id);
+            $messageWithReplies = Message::with('replies')->findOrFail($id);
 
             // Check if a service is associated with the message
-            if ($message->service) {
+            if ($messageWithReplies->service) {
                 // Find the related service based on $message->service (assuming it's service_id)
-                $service = Service::findOrFail($message->service);
-                $message->serviceName = $service->service_name;
+                $relatedService = Service::findOrFail($messageWithReplies->service);
+                $messageWithReplies->serviceName = $relatedService->service_name;
             } else {
-                $message->serviceName = 'Service not specified'; // Handle case where service_id is null or invalid
+                $messageWithReplies->serviceName = 'Service not specified'; // Handle case where service_id is null or invalid
             }
 
             // Prepare data to pass to the view
             $data = [
-                'message' => $message,
-                'info' => $message->replies->isEmpty() ? 'There are no replies for this message.' : null,
+                'message' => $messageWithReplies,
+                'info' => $messageWithReplies->replies->isEmpty() ? 'There are no replies for this message.' : null,
             ];
 
             // Load the view with the data
@@ -100,49 +100,49 @@ class ContactUsInquiryManagementController extends Controller
      */
     public function storeReply(Request $request)
     {
-        $validated = $request->validate([
+        $validatedData = $request->validate([
             'message_id' => 'required|exists:messages,id',
             'reply_message' => 'required|string',
-            // Add additional validation rules as needed
+            'status' => 'required|string'
         ]);
-
+    
         try {
             // Find the message
-            $message = Message::findOrFail($validated['message_id']);
-
+            $targetMessage = Message::findOrFail($validatedData['message_id']);
+    
             // Create a new reply
-            $reply = $message->replies()->create([
-                'message' => $validated['reply_message'],
-                'status' => 'sent', // Assuming you set a default status or it's handled elsewhere
+            $newReply = $targetMessage->replies()->create([
+                'message' => $validatedData['reply_message'],
+                'status' => $validatedData['status'], // Ensure status is saved
             ]);
-
+    
             // Send email notification
-            $emailSent = false;
+            $isEmailSent = false;
             try {
-                Mail::to($message->email)->send(new ReplyNotification($message, $reply));
-                $emailSent = true;
+                Mail::to($targetMessage->email)->send(new ReplyNotification($targetMessage, $newReply));
+                $isEmailSent = true;
             } catch (\Exception $e) {
-                Log::error('Failed to send email notification for message ID ' . $message->id . ': ' . $e->getMessage());
+                Log::error('Failed to send email notification for message ID ' . $targetMessage->id . ': ' . $e->getMessage());
             }
-
+    
             // Update confirmation email sent status
-            $reply->confirmation_email_sent = $emailSent;
-            $reply->save();
-
-            Log::info('Reply stored successfully and email sent for message ID: ' . $message->id);
-
+            $newReply->confirmation_email_sent = $isEmailSent;
+            $newReply->save();
+    
+            Log::info('Reply stored successfully and email sent for message ID: ' . $targetMessage->id);
+    
             // Prepare JSON response
             return response()->json([
-                'emailStatus' => $emailSent,
-                'emailStatusMessage' => $emailSent ? 'Email sent successfully.' : 'Failed to send email notification.',
-                'replyStatus' => $reply->status,
+                'emailStatus' => $isEmailSent,
+                'emailStatusMessage' => $isEmailSent ? 'Email sent successfully.' : 'Failed to send email notification.',
+                'replyStatus' => true,
                 'replyStatusMessage' => 'Reply stored successfully.',
             ], 200);
-
+    
         } catch (\Exception $e) {
             // Log the error
             Log::error('Failed to store reply or send email notification: ' . $e->getMessage());
-
+    
             // Return error JSON response
             return response()->json([
                 'emailStatus' => false,
@@ -152,4 +152,6 @@ class ContactUsInquiryManagementController extends Controller
             ], 500);
         }
     }
+    
+    
 }

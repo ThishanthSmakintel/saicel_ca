@@ -26,7 +26,7 @@ $(document).ready(function() {
                     let replyStatus = jsonResponse.replyStatus;
                     let replyStatusMessage = jsonResponse.replyStatusMessage;
 
-                    if (replyStatus === 'sent') {
+                    if (replyStatus === true) {
                         // Show success message for reply
                         let alertType = emailStatus ? 'green' : 'orange';
                         let alertContent = 'Reply stored successfully!';

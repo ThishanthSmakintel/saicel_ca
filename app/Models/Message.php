@@ -1,7 +1,5 @@
 <?php
 
-// Message.php model
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Message extends Model
 {
     protected $fillable = [
-        'message_content', 'sender_name', 'email', 'service_id', 'confirmation_email_sent',
+        'name', 'email', 'subject', 'service', 'message',
+    ];
+
+    protected $guarded = [
+        'id', 'created_at', 'updated_at',
     ];
 
     public function replies()
@@ -22,4 +24,3 @@ class Message extends Model
         return $this->belongsTo(Service::class);
     }
 }
-
